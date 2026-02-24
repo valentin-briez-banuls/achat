@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
   # Properties
   resources :properties do
+    collection do
+      post :import_from_url
+    end
     resources :simulations
     resources :visits, except: [:index, :show]
     resources :offers, except: [:index, :show]

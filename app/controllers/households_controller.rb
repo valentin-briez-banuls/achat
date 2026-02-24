@@ -1,5 +1,5 @@
 class HouseholdsController < ApplicationController
-  skip_before_action :verify_authorized, only: [:new, :create, :join]
+  skip_after_action :verify_authorized, only: [:new, :create, :join]
 
   def new
     @household = Household.new

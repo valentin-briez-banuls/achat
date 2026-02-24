@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Import Property</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Test Import from URL</h1>
+  <p>Open this page at: <a href="http://localhost:3000/test_import.html">http://localhost:3000/test_import.html</a></p>
+  <p>You must be logged in to use this test page.</p>
+
+  <div>
+    <label>URL (peut être en format Markdown):</label><br>
+    <input type="text" id="url" style="width: 600px;" value="[https://api.jinka.fr/apiv2/alert/redirect_preview?token=4f90eddfeba4e87268ee03eae18d485a&ad=73850207](https://api.jinka.fr/apiv2/alert/redirect_preview?token=4f90eddfeba4e87268ee03eae18d485a&ad=73850207)">
+    <br><br>
+    <button onclick="testImport()">Test Import</button>
+  </div>
+
+  <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f5f5f5; min-height: 100px;">
+    <strong>Résultat:</strong>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    async function testImport() {
+      const url = document.getElementById('url').value;
+      const output = document.getElementById('output');
+
+      output.textContent = 'En cours...';
+
+      try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        const response = await fetch('/properties/import_from_url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken || ''
+          },
+          body: JSON.stringify({ url: url })
+        });
+
+        const data = await response.json();
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        output.textContent = 'Error: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
+

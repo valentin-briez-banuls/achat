@@ -8,7 +8,9 @@ class PropertiesController < ApplicationController
 
     properties = properties.with_status(params[:status]) if params[:status].present?
 
-    @pagy, @properties = pagy(properties.order(created_at: :desc), items: 12)
+    # TODO: Réactiver pagy une fois le module configuré pour Pagy 9+
+    # @pagy, @properties = pagy(properties.order(created_at: :desc), items: 12)
+    @properties = properties.order(created_at: :desc).limit(12)
   end
 
   def show
@@ -22,6 +24,34 @@ class PropertiesController < ApplicationController
   def new
     @property = current_household.properties.build
     authorize @property
+  end
+
+  def import_from_url
+    authorize Property.new(household: current_household)
+
+    raw_url = params[:url]
+
+    if raw_url.blank?
+      render json: { error: "URL manquante" }, status: :unprocessable_entity
+      return
+    end
+
+    # Nettoyer l'URL (gérer les liens Markdown, espaces, etc.)
+    url = clean_url(raw_url)
+
+    Rails.logger.info("=== PropertyScraperService: Starting scrape for URL: #{url}")
+    scraper = PropertyScraperService.new(url)
+    property_data = scraper.call
+    Rails.logger.info("=== PropertyScraperService: Result: #{property_data.inspect}")
+    Rails.logger.info("=== PropertyScraperService: Errors: #{scraper.errors.inspect}")
+
+    if property_data
+      render json: { success: true, data: property_data }
+    else
+      error_message = scraper.errors.any? ? scraper.errors.join(", ") : "Impossible d'extraire les données"
+      Rails.logger.error("=== PropertyScraperService: Failed with error: #{error_message}")
+      render json: { error: error_message }, status: :unprocessable_entity
+    end
   end
 
   def create
@@ -62,6 +92,26 @@ class PropertiesController < ApplicationController
 
   def set_property
     @property = current_household.properties.find(params[:id])
+  end
+
+  def clean_url(raw_url)
+    # Supprimer les espaces avant et après
+    url = raw_url.strip
+
+    # Gérer les liens Markdown [texte](url)
+    if url =~ /\[.*?\]\((https?:\/\/[^\)]+)\)/
+      url = $1
+    end
+
+    # Gérer les liens entre chevrons <url>
+    if url =~ /<(https?:\/\/.+)>/
+      url = $1
+    end
+
+    # Décoder les URLs encodées (si nécessaire)
+    url = URI.decode_www_form_component(url) if url.include?('%')
+
+    url
   end
 
   def property_params
