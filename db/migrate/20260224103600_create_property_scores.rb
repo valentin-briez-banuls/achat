@@ -1,7 +1,7 @@
 class CreatePropertyScores < ActiveRecord::Migration[8.1]
   def change
     create_table :property_scores do |t|
-      t.references :property, null: false, foreign_key: true
+      t.references :property, null: false, foreign_key: true, index: { unique: true }
 
       t.integer :total_score, default: 0  # /100
       t.integer :compatibility  # 0=non_compatible, 1=partielle, 2=stricte
@@ -26,7 +26,6 @@ class CreatePropertyScores < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :property_scores, :property_id, unique: true
     add_index :property_scores, :total_score
   end
 end

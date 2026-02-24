@@ -1,4 +1,6 @@
 class PropertyCriterion < ApplicationRecord
+  self.table_name = "property_criteria"
+
   belongs_to :household
 
   enum :property_condition, { any_condition: 0, ancien: 1, neuf: 2 }

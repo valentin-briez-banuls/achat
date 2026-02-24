@@ -30,6 +30,5 @@ class CreateSimulations < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :simulations, :property_id
   end
 end

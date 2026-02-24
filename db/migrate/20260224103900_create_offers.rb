@@ -14,7 +14,6 @@ class CreateOffers < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :offers, :property_id
     add_index :offers, :status
   end
 end

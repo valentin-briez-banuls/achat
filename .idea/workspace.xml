@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add models, controllers, and views for household and financial profile management">
-      <change beforePath="$PROJECT_DIR$/db/seeds.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/seeds.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/models/user_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/user_spec.rb" afterDir="false" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add comprehensive test suite for core models, services, and factories">
+      <change beforePath="$PROJECT_DIR$/app/models/property_criterion.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/property_criterion.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20260224103400_create_property_criteria.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20260224103400_create_property_criteria.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20260224103500_create_properties.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20260224103500_create_properties.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20260224103600_create_property_scores.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20260224103600_create_property_scores.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20260224103700_create_simulations.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20260224103700_create_simulations.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/migrate/20260224103900_create_offers.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20260224103900_create_offers.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771927654072</updated>
-      <workItem from="1771927655569" duration="2862000" />
+      <workItem from="1771927655569" duration="3197000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`.">
       <option name="closed" value="true" />
@@ -99,7 +103,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771930393687</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add comprehensive test suite for core models, services, and factories">
+      <option name="closed" value="true" />
+      <created>1771930583937</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1771930583937</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -108,7 +120,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`." />
     <MESSAGE value="Add models, controllers, and views for household and financial profile management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add models, controllers, and views for household and financial profile management" />
+    <MESSAGE value="Add FactoryBot factories for financial profiles and property criteria" />
+    <MESSAGE value="Add comprehensive test suite for core models, services, and factories" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

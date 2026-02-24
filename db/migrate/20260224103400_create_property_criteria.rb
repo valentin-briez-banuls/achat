@@ -1,7 +1,7 @@
 class CreatePropertyCriteria < ActiveRecord::Migration[8.1]
   def change
     create_table :property_criteria do |t|
-      t.references :household, null: false, foreign_key: true
+      t.references :household, null: false, foreign_key: true, index: { unique: true }
 
       # Critères obligatoires
       t.decimal :max_budget, precision: 12, scale: 2
@@ -25,6 +25,5 @@ class CreatePropertyCriteria < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :property_criteria, :household_id, unique: true
   end
 end
