@@ -174,14 +174,21 @@ class PropertyScraperService
 
     json_ld = extract_json_ld(html)
 
+    title = json_ld&.dig("name") || extract_meta_content(html, "og:title") || extract_title(html)
+
+    # Parser le titre pour extraire des infos structurées (ex: Jinka)
+    title_data = parse_title_info(title) if title
+
     data = {
       listing_url: url,
-      title: json_ld&.dig("name") || extract_meta_content(html, "og:title") || extract_title(html),
-      price: extract_generic_price(html, json_ld),
-      surface: extract_generic_surface(html),
-      rooms: extract_generic_rooms(html),
-      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
-      postal_code: json_ld&.dig("address", "postalCode")
+      title: title,
+      price: title_data&.dig(:price) || extract_generic_price(html, json_ld),
+      surface: title_data&.dig(:surface) || extract_generic_surface(html),
+      rooms: title_data&.dig(:rooms) || extract_generic_rooms(html),
+      bedrooms: title_data&.dig(:bedrooms) || extract_generic_bedrooms(html),
+      city: title_data&.dig(:city) || json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html)
     }.compact
 
     data.empty? ? nil : data
@@ -471,6 +478,71 @@ class PropertyScraperService
     if html =~ /<span[^>]*class=["'][^"']*city[^"']*["'][^>]*>(.*?)<\/span>/mi
       $1.strip
     end
+  end
+
+  def extract_generic_bedrooms(html)
+    if html =~ /(\d+)\s*chambres?/i
+      $1.to_i
+    end
+  end
+
+  def extract_generic_postal_code(html)
+    if html =~ /\b(\d{5})\b/
+      $1
+    end
+  end
+
+  def extract_generic_type(html)
+    case html
+    when /\bmaison\b/i
+      "maison"
+    when /\bappartement\b/i
+      "appartement"
+    when /\bstudio\b/i
+      "appartement"
+    when /\bloft\b/i
+      "loft"
+    when /\bduplex\b/i
+      "duplex"
+    else
+      nil
+    end
+  end
+
+  def parse_title_info(title)
+    return nil unless title
+
+    data = {}
+
+    # Parser les formats comme "Ville - Prix€ - Surface m - Xp. - Xch."
+    # Ex: "Alenya - 169000€ - 100m - 4p. - 3ch. - via une agence"
+
+    # Extraire la ville (premier mot avant un tiret ou après certains patterns)
+    if title =~ /^([A-ZÀ-ÿ][a-zà-ÿ\-\s]+?)\s*[-–—]/
+      data[:city] = $1.strip
+    end
+
+    # Extraire le prix (nombre suivi de € ou EUR)
+    if title =~ /(\d+(?:\s?\d+)*)\s*€/
+      data[:price] = $1.gsub(/\s+/, "").to_i
+    end
+
+    # Extraire la surface (nombre suivi de m, m2 ou m²)
+    if title =~ /(\d+(?:[.,]\d+)?)\s*m[²2]?(?:\s|$|-)/i
+      data[:surface] = $1.tr(",", ".").to_f
+    end
+
+    # Extraire le nombre de pièces (nombre suivi de p. ou pièces)
+    if title =~ /(\d+)\s*(?:p\.|pièces?)/i
+      data[:rooms] = $1.to_i
+    end
+
+    # Extraire le nombre de chambres (nombre suivi de ch. ou chambres)
+    if title =~ /(\d+)\s*(?:ch\.|chambres?)/i
+      data[:bedrooms] = $1.to_i
+    end
+
+    data.empty? ? nil : data
   end
 end
 
