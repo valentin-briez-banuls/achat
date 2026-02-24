@@ -11,7 +11,8 @@ class JavascriptRendererService
 
     Rails.logger.info("JavascriptRendererService: Rendering #{@url}")
 
-    browser = Ferrum::Browser.new(headless: true, timeout: 30)
+    browser_options = ENV["CHROME_NO_SANDBOX"] ? { "no-sandbox": nil, "disable-dev-shm-usage": nil } : {}
+    browser = Ferrum::Browser.new(headless: true, timeout: 30, browser_options: browser_options)
 
     begin
       browser.go_to(@url)

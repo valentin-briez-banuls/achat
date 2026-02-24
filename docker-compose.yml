@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: achat
+      POSTGRES_PASSWORD: ${ACHAT_DATABASE_PASSWORD}
+      POSTGRES_DB: achat_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U achat -d achat_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    image: ${DOCKER_IMAGE:-registry.gitlab.com/VOTRE_UTILISATEUR/achat:latest}
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      SOLID_QUEUE_IN_PUMA: "true"
+      CHROME_NO_SANDBOX: "true"
+    volumes:
+      - achat_storage:/rails/storage
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  achat_storage:
