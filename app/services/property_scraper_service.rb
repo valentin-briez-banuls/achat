@@ -5,6 +5,7 @@ require "digest"
 
 class PropertyScraperService
   JINKA_REDIRECT_PATTERN = %r{api\.jinka\.fr/apiv2/alert/redirect_preview}
+  JINKA_AD_PATTERN = %r{jinka\.fr/ad/}
   SELOGER_PATTERN = %r{seloger\.com}
   LEBONCOIN_PATTERN = %r{leboncoin\.fr}
   PAP_PATTERN = %r{pap\.fr}
@@ -34,18 +35,28 @@ class PropertyScraperService
     Rails.logger.info("PropertyScraperService: Starting scrape for #{@url}")
     Rails.logger.info("  Options: cache=#{@use_cache}, images=#{@extract_images}, geocode=#{@geocode}, js=#{@use_javascript}")
 
-    # Vérifier le cache si activé
-    if @use_cache
+    # Vérifier le cache si activé (sauf pour les URLs Jinka qui expirent)
+    if @use_cache && !@url.match?(JINKA_REDIRECT_PATTERN)
       cached_data = check_cache
       if cached_data
         Rails.logger.info("PropertyScraperService: Cache hit, returning cached data")
         return cached_data
       end
+    elsif @url.match?(JINKA_REDIRECT_PATTERN)
+      Rails.logger.info("PropertyScraperService: Jinka URL detected, bypassing cache")
     end
 
-    # Résoudre les redirections Jinka
+    # Résoudre les redirections Jinka (API et pages directes)
     resolved_url = resolve_jinka_redirect(@url)
+    resolved_url = resolve_jinka_ad_page(resolved_url) if resolved_url.match?(JINKA_AD_PATTERN)
+
     Rails.logger.info("PropertyScraperService: URL resolved to #{resolved_url}")
+
+    # Vérifier si la résolution Jinka a échoué
+    if @url.match?(JINKA_REDIRECT_PATTERN) && resolved_url == @url
+      @errors << "Le lien Jinka a expiré ou ne redirige plus. Utilisez l'URL directe du bien (ouvrez le lien dans votre navigateur et copiez l'URL finale)."
+      Rails.logger.warn("PropertyScraperService: Jinka redirect failed - URL unchanged")
+    end
 
     # Extraire les données selon la source
     data = case resolved_url
@@ -92,8 +103,10 @@ class PropertyScraperService
       data.merge!(coordinates) if coordinates
     end
 
-    # Mettre en cache si activé
-    save_to_cache(data) if @use_cache
+    # Mettre en cache si activé (mais pas pour les URLs Jinka)
+    if @use_cache && !@url.match?(JINKA_REDIRECT_PATTERN)
+      save_to_cache(data)
+    end
 
     Rails.logger.info("PropertyScraperService: Extraction complete")
     Rails.logger.info("  Data fields: #{data.keys.join(', ')}")
@@ -264,6 +277,55 @@ class PropertyScraperService
     current_url
   rescue StandardError => e
     Rails.logger.error("Failed to resolve Jinka redirect: #{e.message}")
+    url
+  end
+
+  def resolve_jinka_ad_page(url)
+    return url unless url.match?(JINKA_AD_PATTERN)
+
+    Rails.logger.info("PropertyScraperService: Extracting real URL from Jinka ad page #{url}")
+
+    uri = URI.parse(url)
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https", open_timeout: 10, read_timeout: 10) do |http|
+      request = Net::HTTP::Get.new(uri)
+      request["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+      http.request(request)
+    end
+
+    if response.is_a?(Net::HTTPSuccess)
+      body = response.body
+      body.force_encoding("UTF-8") if body.encoding.name == "ASCII-8BIT"
+      body = body.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+
+      # Chercher le lien "Voir l'annonce" ou le lien externe
+      if body =~ /<a[^>]*href=["']([^"']+)["'][^>]*(?:class=["'][^"']*button[^"']*["']|>.*?Voir.*?annonce)/mi
+        real_url = $1
+        # Décoder les entités HTML si nécessaire
+        real_url = CGI.unescapeHTML(real_url) if real_url.include?("&")
+        Rails.logger.info("PropertyScraperService: Found real URL in Jinka page: #{real_url}")
+        return real_url
+      end
+
+      # Chercher dans le JSON embarqué
+      if body =~ /<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/mi
+        json_content = $1
+        begin
+          data = JSON.parse(json_content)
+          if data["url"] && !data["url"].include?("jinka.fr")
+            Rails.logger.info("PropertyScraperService: Found URL in JSON-LD: #{data["url"]}")
+            return data["url"]
+          end
+        rescue JSON::ParserError
+          # Continuer
+        end
+      end
+
+      Rails.logger.warn("PropertyScraperService: Could not extract real URL from Jinka ad page")
+    end
+
+    url
+  rescue StandardError => e
+    Rails.logger.error("Failed to resolve Jinka ad page: #{e.message}")
     url
   end
 

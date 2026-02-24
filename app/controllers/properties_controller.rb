@@ -61,7 +61,8 @@ class PropertiesController < ApplicationController
         success: true,
         data: property_data,
         image_urls: scraper.image_urls,
-        images_count: scraper.image_urls.size
+        images_count: scraper.image_urls.size,
+        warnings: scraper.errors # Inclure les warnings même en cas de succès
       }
       render json: response_data
     else
