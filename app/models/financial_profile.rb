@@ -8,6 +8,8 @@ class FinancialProfile < ApplicationRecord
   validates :salary_person_2, numericality: { greater_than_or_equal_to: 0 }
   validates :other_income, numericality: { greater_than_or_equal_to: 0 }
   validates :monthly_charges, numericality: { greater_than_or_equal_to: 0 }
+  validates :existing_loan_payments, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :other_monthly_charges, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :personal_contribution, numericality: { greater_than_or_equal_to: 0 }
   validates :remaining_savings, numericality: { greater_than_or_equal_to: 0 }
   validates :proposed_rate, numericality: { greater_than: 0, less_than: 15 }, allow_nil: true
@@ -17,6 +19,16 @@ class FinancialProfile < ApplicationRecord
 
   PTZ_ZONES = %w[A Abis B1 B2 C].freeze
   DURATIONS = [10, 15, 20, 25, 30].freeze
+
+  # Crédits en cours uniquement (règle HCSF pour le taux d'endettement)
+  def loan_payments_for_debt_ratio
+    existing_loan_payments || 0
+  end
+
+  # Total de toutes les charges (pour le reste à vivre)
+  def total_charges
+    (existing_loan_payments || 0) + (other_monthly_charges || 0)
+  end
 
   def total_monthly_income
     salary_person_1 + salary_person_2 + other_income

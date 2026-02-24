@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_130929) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_132618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,12 +49,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_130929) do
     t.datetime "created_at", null: false
     t.decimal "debt_ratio", precision: 5, scale: 2
     t.integer "desired_duration_years", default: 25
+    t.decimal "existing_loan_payments"
     t.decimal "fiscal_reference_income", precision: 12, scale: 2, default: "0.0"
     t.bigint "household_id", null: false
     t.integer "household_size", default: 2
     t.decimal "max_monthly_payment", precision: 10, scale: 2
     t.decimal "monthly_charges", precision: 10, scale: 2, default: "0.0"
     t.decimal "other_income", precision: 10, scale: 2, default: "0.0"
+    t.decimal "other_monthly_charges"
     t.decimal "personal_contribution", precision: 12, scale: 2, default: "0.0"
     t.decimal "proposed_rate", precision: 5, scale: 3
     t.string "ptz_zone"

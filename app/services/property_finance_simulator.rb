@@ -107,10 +107,16 @@ class PropertyFinanceSimulator
   def compute_effort(monthly)
     profile = household.financial_profile
     income = profile&.total_monthly_income || 0
-    charges = profile&.monthly_charges || 0
 
-    total_charges = monthly[:total] + charges
-    debt_ratio = income.positive? ? (total_charges / income * 100).round(2) : 0
+    # RÈGLE HCSF : Seuls les crédits en cours comptent dans le taux d'endettement
+    # PAS les charges courantes (assurances, abonnements, etc.)
+    existing_loans = profile&.existing_loan_payments || profile&.monthly_charges || 0
+
+    # Taux d'endettement selon la règle HCSF (uniquement les crédits)
+    total_loan_payments = monthly[:total] + existing_loans
+    debt_ratio = income.positive? ? (total_loan_payments / income * 100).round(2) : 0
+
+    # Effort mensuel réel (inclut charges copro + taxe foncière)
     real_effort = (monthly[:total] + (property.copro_charges_monthly || 0) +
                    (property.property_tax_yearly || 0) / 12).round(2)
 
