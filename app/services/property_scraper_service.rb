@@ -1,6 +1,7 @@
 require "net/http"
 require "json"
 require "uri"
+require "digest"
 
 class PropertyScraperService
   JINKA_REDIRECT_PATTERN = %r{api\.jinka\.fr/apiv2/alert/redirect_preview}
@@ -8,22 +9,38 @@ class PropertyScraperService
   LEBONCOIN_PATTERN = %r{leboncoin\.fr}
   PAP_PATTERN = %r{pap\.fr}
   BIENICI_PATTERN = %r{bienici\.com}
+  LOGIC_IMMO_PATTERN = %r{logic-immo\.com}
+  ORPI_PATTERN = %r{orpi\.com}
+  CENTURY21_PATTERN = %r{century21\.fr}
+  LAFORET_PATTERN = %r{laforet\.com}
+  FIGARO_IMMO_PATTERN = %r{proprietes\.lefigaro\.fr}
 
-  attr_reader :url, :errors
+  attr_reader :url, :errors, :image_urls
 
-  def initialize(url)
+  def initialize(url, options = {})
     @url = url
     @errors = []
+    @image_urls = []
+    @use_cache = options.fetch(:cache, true)
+    @extract_images = options.fetch(:images, true)
+    @geocode = options.fetch(:geocode, true)
+    @use_javascript = options.fetch(:javascript, false)
   end
 
   def call
     return nil unless valid_url?
 
+    # Vérifier le cache si activé
+    if @use_cache
+      cached_data = check_cache
+      return cached_data if cached_data
+    end
+
     # Résoudre les redirections Jinka
     resolved_url = resolve_jinka_redirect(@url)
 
     # Extraire les données selon la source
-    case resolved_url
+    data = case resolved_url
     when SELOGER_PATTERN
       extract_from_seloger(resolved_url)
     when LEBONCOIN_PATTERN
@@ -32,13 +49,76 @@ class PropertyScraperService
       extract_from_pap(resolved_url)
     when BIENICI_PATTERN
       extract_from_bienici(resolved_url)
+    when LOGIC_IMMO_PATTERN
+      extract_from_logic_immo(resolved_url)
+    when ORPI_PATTERN
+      extract_from_orpi(resolved_url)
+    when CENTURY21_PATTERN
+      extract_from_century21(resolved_url)
+    when LAFORET_PATTERN
+      extract_from_laforet(resolved_url)
+    when FIGARO_IMMO_PATTERN
+      extract_from_figaro_immo(resolved_url)
     else
       extract_generic(resolved_url)
     end
+
+    return nil unless data
+
+    # Ajouter le géocoding si activé
+    if @geocode && data[:city] && data[:postal_code]
+      coordinates = geocode_address(data[:city], data[:postal_code], data[:address])
+      data.merge!(coordinates) if coordinates
+    end
+
+    # Mettre en cache si activé
+    save_to_cache(data) if @use_cache
+
+    data
   rescue StandardError => e
     @errors << "Erreur lors de l'extraction : #{e.message}"
     Rails.logger.error("PropertyScraperService error: #{e.message}\n#{e.backtrace.join("\n")}")
     nil
+  end
+
+  # Méthode pour extraire et attacher les images à un bien
+  def extract_and_attach_images(property)
+    return unless @extract_images && @image_urls.any?
+
+    extractor = PropertyImageExtractorService.new(nil, @url)
+    extractor.download_and_attach_to(property, @image_urls)
+    @errors.concat(extractor.errors) if extractor.errors.any?
+  end
+
+  private
+
+  def check_cache
+    cache = PropertyScrapeCache.find_by_url(@url)
+    return nil unless cache
+
+    Rails.logger.info("PropertyScraperService: Cache hit for #{@url}")
+    @image_urls = cache.images_urls || []
+    cache.scraped_data.symbolize_keys
+  end
+
+  def save_to_cache(data)
+    PropertyScrapeCache.cache_for_url(@url, data, @image_urls)
+    Rails.logger.info("PropertyScraperService: Cached data for #{@url}")
+  rescue StandardError => e
+    Rails.logger.error("PropertyScraperService: Failed to cache: #{e.message}")
+  end
+
+  def geocode_address(city, postal_code, address = nil)
+    service = GeocodingService.new(city, postal_code, address)
+    result = service.call
+
+    if result
+      Rails.logger.info("PropertyScraperService: Geocoded to #{result[:latitude]}, #{result[:longitude]}")
+    else
+      @errors.concat(service.errors)
+    end
+
+    result
   end
 
   private
@@ -195,7 +275,22 @@ class PropertyScraperService
   end
 
   # Helpers pour fetch
-  def fetch_html(url)
+  def fetch_html(url, use_js = @use_javascript)
+    # Essayer avec JavaScript si demandé ou si nécessaire
+    if use_js && JavascriptRendererService.enabled?
+      js_renderer = JavascriptRendererService.new(url)
+      html = js_renderer.call
+
+      if html
+        extract_images_from_html(html, url)
+        return html
+      else
+        @errors.concat(js_renderer.errors)
+        Rails.logger.warn("PropertyScraperService: JS rendering failed, falling back to simple HTTP")
+      end
+    end
+
+    # Fetch simple HTTP
     uri = URI.parse(url)
     response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https", open_timeout: 10, read_timeout: 10) do |http|
       request = Net::HTTP::Get.new(uri)
@@ -211,6 +306,10 @@ class PropertyScraperService
       html.force_encoding("UTF-8") if html.encoding.name == "ASCII-8BIT"
       # Remplacer les caractères invalides
       html = html.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+
+      # Extraire les URLs d'images
+      extract_images_from_html(html, url)
+
       return html
     end
 
@@ -219,6 +318,15 @@ class PropertyScraperService
   rescue StandardError => e
     @errors << "Erreur réseau : #{e.message}"
     nil
+  end
+
+  def extract_images_from_html(html, url)
+    return unless @extract_images
+
+    extractor = PropertyImageExtractorService.new(html, url)
+    images = extractor.call
+    @image_urls.concat(images) if images.any?
+    @errors.concat(extractor.errors) if extractor.errors.any?
   end
 
   def extract_json_ld(html)
@@ -506,6 +614,139 @@ class PropertyScraperService
       "duplex"
     else
       nil
+    end
+  end
+
+  # Logic-immo extractors
+  def extract_from_logic_immo(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    json_ld = extract_json_ld(html)
+
+    data = {
+      listing_url: url,
+      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
+      price: extract_generic_price(html, json_ld),
+      surface: extract_generic_surface(html),
+      rooms: extract_generic_rooms(html),
+      bedrooms: extract_generic_bedrooms(html),
+      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html),
+      energy_class: extract_dpe_generic(html),
+      ges_class: extract_ges_generic(html)
+    }.compact
+
+    data.empty? ? nil : data
+  end
+
+  # Orpi extractors
+  def extract_from_orpi(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    json_ld = extract_json_ld(html)
+
+    data = {
+      listing_url: url,
+      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
+      price: extract_generic_price(html, json_ld),
+      surface: extract_generic_surface(html),
+      rooms: extract_generic_rooms(html),
+      bedrooms: extract_generic_bedrooms(html),
+      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html),
+      energy_class: extract_dpe_generic(html),
+      ges_class: extract_ges_generic(html)
+    }.compact
+
+    data.empty? ? nil : data
+  end
+
+  # Century21 extractors
+  def extract_from_century21(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    json_ld = extract_json_ld(html)
+
+    data = {
+      listing_url: url,
+      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
+      price: extract_generic_price(html, json_ld),
+      surface: extract_generic_surface(html),
+      rooms: extract_generic_rooms(html),
+      bedrooms: extract_generic_bedrooms(html),
+      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html),
+      energy_class: extract_dpe_generic(html),
+      ges_class: extract_ges_generic(html)
+    }.compact
+
+    data.empty? ? nil : data
+  end
+
+  # Laforêt extractors
+  def extract_from_laforet(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    json_ld = extract_json_ld(html)
+
+    data = {
+      listing_url: url,
+      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
+      price: extract_generic_price(html, json_ld),
+      surface: extract_generic_surface(html),
+      rooms: extract_generic_rooms(html),
+      bedrooms: extract_generic_bedrooms(html),
+      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html),
+      energy_class: extract_dpe_generic(html),
+      ges_class: extract_ges_generic(html)
+    }.compact
+
+    data.empty? ? nil : data
+  end
+
+  # Figaro Immobilier extractors
+  def extract_from_figaro_immo(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    json_ld = extract_json_ld(html)
+
+    data = {
+      listing_url: url,
+      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
+      price: extract_generic_price(html, json_ld),
+      surface: extract_generic_surface(html),
+      rooms: extract_generic_rooms(html),
+      bedrooms: extract_generic_bedrooms(html),
+      city: json_ld&.dig("address", "addressLocality") || extract_generic_city(html),
+      postal_code: json_ld&.dig("address", "postalCode") || extract_generic_postal_code(html),
+      property_type: extract_generic_type(html),
+      energy_class: extract_dpe_generic(html),
+      ges_class: extract_ges_generic(html)
+    }.compact
+
+    data.empty? ? nil : data
+  end
+
+  # Extracteurs génériques pour DPE et GES
+  def extract_dpe_generic(html)
+    if html =~ /DPE\s*[:\-]?\s*([A-G])/i || html =~ /Classe\s+énergétique\s*[:\-]?\s*([A-G])/i
+      $1.upcase
+    end
+  end
+
+  def extract_ges_generic(html)
+    if html =~ /GES\s*[:\-]?\s*([A-G])/i || html =~ /Émissions?\s+(?:de\s+)?GES\s*[:\-]?\s*([A-G])/i
+      $1.upcase
     end
   end
 

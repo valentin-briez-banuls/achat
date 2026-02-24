@@ -4,29 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Implement responsive and localized authentication views with Tailwind CSS, including registration, login, password management, and profile editing.">
-      <change afterPath="$PROJECT_DIR$/AJOUTER_SITE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEPLOY_CHECKLIST.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FIX_VERIFY_AUTHORIZED.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUIDE_IMPORT.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMPORT_AUTOMATIQUE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMPORT_README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IMPORT_STATUS.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/javascript/controllers/property_importer_controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/property_scraper_service.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/test_import.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/services/property_scraper_service_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_import.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/achat.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/achat.iml" afterDir="false" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Enhance property scraping: parse structured info from titles, including city, price, surface, rooms, and bedrooms; add generic extractors for bedrooms, postal codes, and property types. Update test page documentation.">
+      <change afterPath="$PROJECT_DIR$/IMPLEMENTATION_V2_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMPORT_AMELIORATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMPORT_AMELIORATIONS_V2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MIGRATION_V2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/QUICKSTART_V2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/jobs/clean_expired_scrape_caches_job.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/geocoding_service.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/javascript_renderer_service.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/property_image_extractor_service.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/initializers/geocoder.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/test_import.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/test_import_v2.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/households_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/households_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMPORT_README.md" beforeDir="false" afterPath="$PROJECT_DIR$/IMPORT_README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controllers/properties_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/properties_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/policies/property_policy.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/policies/property_policy.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/households/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/edit.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/households/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/new.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/properties/_form.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/_form.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/properties/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/controllers/property_importer_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/controllers/property_importer_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/property_scraper_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_scraper_service.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/recurring.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/recurring.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -245,7 +244,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771927654072</updated>
-      <workItem from="1771927655569" duration="9055000" />
+      <workItem from="1771927655569" duration="10103000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`.">
       <option name="closed" value="true" />
@@ -303,7 +302,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771932314021</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add property import feature with URL scraping, including controller action, service, and frontend updates.">
+      <option name="closed" value="true" />
+      <created>1771937519967</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1771937519967</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Enhance property scraping: parse structured info from titles, including city, price, surface, rooms, and bedrooms; add generic extractors for bedrooms, postal codes, and property types. Update test page documentation.">
+      <option name="closed" value="true" />
+      <created>1771937697856</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1771937697856</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -318,7 +333,9 @@
     <MESSAGE value="Initialize database schema and migrations for core models including households, properties, offers, simulations, and related associations." />
     <MESSAGE value="Adjust workspace configuration and add Pagy initializer" />
     <MESSAGE value="Implement responsive and localized authentication views with Tailwind CSS, including registration, login, password management, and profile editing." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement responsive and localized authentication views with Tailwind CSS, including registration, login, password management, and profile editing." />
+    <MESSAGE value="Add property import feature with URL scraping, including controller action, service, and frontend updates." />
+    <MESSAGE value="Enhance property scraping: parse structured info from titles, including city, price, surface, rooms, and bedrooms; add generic extractors for bedrooms, postal codes, and property types. Update test page documentation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhance property scraping: parse structured info from titles, including city, price, surface, rooms, and bedrooms; add generic extractors for bedrooms, postal codes, and property types. Update test page documentation." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

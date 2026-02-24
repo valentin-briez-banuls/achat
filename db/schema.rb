@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_103900) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_125831) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -148,6 +148,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_103900) do
     t.integer "view_score", default: 0
     t.index ["property_id"], name: "index_property_scores_on_property_id", unique: true
     t.index ["total_score"], name: "index_property_scores_on_total_score"
+  end
+
+  create_table "property_scrape_caches", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.jsonb "images_urls"
+    t.jsonb "scraped_data"
+    t.datetime "updated_at", null: false
+    t.string "url_hash"
+    t.index ["expires_at"], name: "index_property_scrape_caches_on_expires_at"
+    t.index ["url_hash"], name: "index_property_scrape_caches_on_url_hash"
   end
 
   create_table "simulations", force: :cascade do |t|

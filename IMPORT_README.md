@@ -36,6 +36,7 @@ Plus besoin de recopier manuellement les données !
 ✅ **Localisation**
 - Ville
 - Code postal
+- **🆕 Latitude / Longitude (géocodage automatique)**
 
 ✅ **Caractéristiques**
 - Type de bien (appartement, maison, etc.)
@@ -44,6 +45,17 @@ Plus besoin de recopier manuellement les données !
 
 ✅ **Autres**
 - URL de l'annonce (sauvegardée automatiquement)
+- **🆕 Photos de l'annonce (extraction automatique)**
+
+### 🆕 Nouvelles Fonctionnalités V2
+
+- **Géocodage automatique** : Conversion ville + code postal → GPS
+- **Extraction d'images** : Jusqu'à 10 photos par annonce
+- **Cache intelligent** : Évite les re-scraping (7 jours)
+- **Rendu JavaScript** : Support des sites dynamiques
+- **5 nouvelles plateformes** : Logic-immo, Orpi, Century21, Laforêt, Figaro Immo
+
+📖 **Documentation complète** : Voir [IMPORT_AMELIORATIONS_V2.md](IMPORT_AMELIORATIONS_V2.md)
 
 ## 🎬 Démarrage rapide
 

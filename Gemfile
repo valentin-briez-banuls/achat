@@ -26,6 +26,11 @@ gem "pagy"
 # Active Storage image processing
 gem "image_processing", "~> 1.2"
 
+# Web scraping & data extraction
+gem "geocoder" # Géocoding automatique
+gem "down", "~> 5.0" # Téléchargement d'images
+gem "ferrum" # Browser automation pour JavaScript rendering
+
 # Infrastructure
 gem "solid_cache"
 gem "solid_queue"

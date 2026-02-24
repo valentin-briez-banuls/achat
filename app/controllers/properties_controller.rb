@@ -40,13 +40,30 @@ class PropertiesController < ApplicationController
     url = clean_url(raw_url)
 
     Rails.logger.info("=== PropertyScraperService: Starting scrape for URL: #{url}")
-    scraper = PropertyScraperService.new(url)
+
+    # Options de scraping
+    options = {
+      cache: true,
+      images: true,
+      geocode: true,
+      javascript: false # Peut être activé via un paramètre
+    }
+
+    scraper = PropertyScraperService.new(url, options)
     property_data = scraper.call
+
     Rails.logger.info("=== PropertyScraperService: Result: #{property_data.inspect}")
+    Rails.logger.info("=== PropertyScraperService: Images found: #{scraper.image_urls.size}")
     Rails.logger.info("=== PropertyScraperService: Errors: #{scraper.errors.inspect}")
 
     if property_data
-      render json: { success: true, data: property_data }
+      response_data = {
+        success: true,
+        data: property_data,
+        image_urls: scraper.image_urls,
+        images_count: scraper.image_urls.size
+      }
+      render json: response_data
     else
       error_message = scraper.errors.any? ? scraper.errors.join(", ") : "Impossible d'extraire les données"
       Rails.logger.error("=== PropertyScraperService: Failed with error: #{error_message}")
