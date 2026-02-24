@@ -50,7 +50,13 @@ class PropertyScraperService
 
     # Résoudre les redirections Jinka (API et pages directes)
     resolved_url = resolve_jinka_redirect(@url)
-    resolved_url = resolve_jinka_ad_page(resolved_url) if resolved_url.match?(JINKA_AD_PATTERN)
+
+    # Pour les pages Jinka /ad/, on garde l'URL Jinka au lieu de suivre vers Bien'ici
+    # car Jinka a déjà toutes les infos structurées
+    if @url.match?(JINKA_AD_PATTERN) && resolved_url != @url
+      Rails.logger.info("PropertyScraperService: Jinka ad page detected, using Jinka data instead of #{resolved_url}")
+      resolved_url = @url
+    end
 
     Rails.logger.info("PropertyScraperService: URL resolved to #{resolved_url}")
 
@@ -65,6 +71,9 @@ class PropertyScraperService
 
     # Extraire les données selon la source
     data = case resolved_url
+    when JINKA_AD_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Jinka extractor")
+      extract_from_jinka(resolved_url)
     when SELOGER_PATTERN
       Rails.logger.info("PropertyScraperService: Using SeLoger extractor")
       extract_from_seloger(resolved_url)
@@ -343,6 +352,62 @@ class PropertyScraperService
     url
   end
 
+  def extract_from_jinka(url)
+    html = fetch_html(url)
+    return nil unless html
+
+    # Chercher le prix dans le HTML avec plusieurs stratégies
+    price = nil
+
+    # Stratégie 1: Chercher dans le contexte "text-5xl" (prix principal affiché en gros)
+    if html =~ /text-5xl[^>]*>.*?(\d+(?:[\s\u00A0]+\d+)*)\s*€/m
+      price_str = $1.gsub(/[\s\u00A0]+/, "")
+      price = price_str.to_i
+      Rails.logger.info("PropertyScraperService: Found price (text-5xl): #{price}")
+    end
+
+    # Stratégie 2: Chercher "font-bold" suivi d'un grand prix (> 50000)
+    if price.nil? && html =~ /font-bold[^>]*>.*?(\d+(?:[\s\u00A0]+\d+)+)\s*€/m
+      price_str = $1.gsub(/[\s\u00A0]+/, "")
+      candidate = price_str.to_i
+      if candidate > 50000 # Prix immobilier typique
+        price = candidate
+        Rails.logger.info("PropertyScraperService: Found price (font-bold): #{price}")
+      end
+    end
+
+    # Stratégie 3: Premier prix à 6+ chiffres trouvé
+    if price.nil?
+      html.scan(/(\d+(?:[\s\u00A0]+\d+)+)\s*€/).each do |match|
+        price_str = match[0].gsub(/[\s\u00A0]+/, "")
+        candidate = price_str.to_i
+        if candidate >= 50000 # Prix immobilier minimum raisonnable
+          price = candidate
+          Rails.logger.info("PropertyScraperService: Found price (scan): #{price}")
+          break
+        end
+      end
+    end
+
+    # Chercher les autres données
+    title = extract_meta_content(html, "og:title") || extract_title(html)
+    title = CGI.unescapeHTML(title) if title&.include?("&")
+    title_data = parse_title_info(title) if title
+
+    data = {
+      listing_url: url,
+      title: title,
+      price: price || title_data&.dig(:price),
+      surface: title_data&.dig(:surface),
+      rooms: title_data&.dig(:rooms),
+      bedrooms: title_data&.dig(:bedrooms),
+      city: title_data&.dig(:city),
+      property_type: extract_generic_type(html)
+    }.compact
+
+    data
+  end
+
   def extract_from_seloger(url)
     html = fetch_html(url)
     return nil unless html
@@ -414,14 +479,19 @@ class PropertyScraperService
     end
 
     json_ld = extract_json_ld(html)
+    title = json_ld&.dig("name") || extract_meta_content(html, "og:title")
+
+    # Parser le titre pour extraire les infos manquantes (prix, surface, etc.)
+    title_data = parse_title_info(title) if title
 
     data = {
       listing_url: url,
-      title: json_ld&.dig("name") || extract_meta_content(html, "og:title"),
-      price: extract_bienici_price(html, json_ld),
-      surface: extract_bienici_surface(html),
-      rooms: extract_bienici_rooms(html),
-      city: extract_bienici_city(html),
+      title: title,
+      price: extract_bienici_price(html, json_ld) || title_data&.dig(:price),
+      surface: extract_bienici_surface(html) || title_data&.dig(:surface),
+      rooms: extract_bienici_rooms(html) || title_data&.dig(:rooms),
+      bedrooms: title_data&.dig(:bedrooms),
+      city: extract_bienici_city(html) || title_data&.dig(:city),
       postal_code: extract_bienici_postal_code(html),
       property_type: extract_bienici_type(html),
       energy_class: extract_bienici_dpe(html),
@@ -939,6 +1009,9 @@ class PropertyScraperService
   def parse_title_info(title)
     return nil unless title
 
+    # Nettoyer les entités HTML
+    title = CGI.unescapeHTML(title) if title.include?("&")
+
     data = {}
 
     # Parser les formats comme "Ville - Prix€ - Surface m - Xp. - Xch."
@@ -949,23 +1022,24 @@ class PropertyScraperService
       data[:city] = $1.strip
     end
 
-    # Extraire le prix (nombre suivi de € ou EUR)
-    if title =~ /(\d+(?:\s?\d+)*)\s*€/
-      data[:price] = $1.gsub(/\s+/, "").to_i
+    # Extraire le prix (nombre avec espaces possibles suivi de € ou EUR)
+    # Gère: "215 000 €", "215000€", "215 000€"
+    if title =~ /(\d+(?:[\s\u00A0]\d+)*)\s*€/
+      data[:price] = $1.gsub(/[\s\u00A0]+/, "").to_i
     end
 
     # Extraire la surface (nombre suivi de m, m2 ou m²)
-    if title =~ /(\d+(?:[.,]\d+)?)\s*m[²2]?(?:\s|$|-)/i
+    if title =~ /(\d+(?:[.,]\d+)?)\s*m[²2]?(?:\s|$|-|,)/i
       data[:surface] = $1.tr(",", ".").to_f
     end
 
     # Extraire le nombre de pièces (nombre suivi de p. ou pièces)
-    if title =~ /(\d+)\s*(?:p\.|pièces?)/i
+    if title =~ /(\d+)\s*(?:p\.?|pièces?)/i
       data[:rooms] = $1.to_i
     end
 
-    # Extraire le nombre de chambres (nombre suivi de ch. ou chambres)
-    if title =~ /(\d+)\s*(?:ch\.|chambres?)/i
+    # Extraire le nombre de chambres (nombre suivi de ch. ou chambres ou c.)
+    if title =~ /(\d+)\s*(?:ch\.?|c\.?|chambres?)/i
       data[:bedrooms] = $1.to_i
     end
 
