@@ -19,8 +19,8 @@
       <%= render "shared/navbar" %>
     <% end %>
 
-    <main class="<%= user_signed_in? ? 'lg:pl-64' : '' %>">
-      <div class="<%= user_signed_in? ? 'px-4 py-6 sm:px-6 lg:px-8' : '' %>">
+    <main class="<%= user_signed_in? ? 'lg:pl-64' : '' %> min-h-screen">
+      <div class="<%= user_signed_in? ? 'px-4 py-4 sm:px-6 lg:px-8 pb-safe' : '' %>">
         <%= render "shared/flash" %>
         <%= yield %>
       </div>

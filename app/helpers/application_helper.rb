@@ -6,8 +6,8 @@ module ApplicationHelper
     css = active ? "bg-gray-50 text-blue-600" : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
 
     content_tag(:li) do
-      link_to path, class: "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold #{css}" do
-        nav_icon(icon, active) + text
+      link_to path, class: "group flex gap-x-3 rounded-md px-2 py-3 lg:py-2 text-sm leading-6 font-semibold #{css} min-h-[44px] items-center" do
+        nav_icon(icon, active) + content_tag(:span, text)
       end
     end
   end

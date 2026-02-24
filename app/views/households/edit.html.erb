@@ -1,9 +1,9 @@
 <% content_for(:title, "Modifier le foyer") %>
 
 <div class="mx-auto max-w-lg">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">Modifier le foyer</h1>
+  <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Modifier le foyer</h1>
 
-  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-6">
     <%= form_with(model: @household, url: household_path, class: "space-y-6") do |f| %>
       <div>
         <%= f.label :name, "Nom du foyer", class: "block text-sm font-medium text-gray-700" %>

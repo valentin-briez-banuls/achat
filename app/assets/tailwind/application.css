@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+/* Safe-area iOS / Android */
+@layer utilities {
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Amélioration globale mobile */
+@layer base {
+  /* Empêche le zoom sur les inputs iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Scroll fluide */
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Touch target minimum 44px */
+  button,
+  [role="button"],
+  a {
+    touch-action: manipulation;
+  }
+}
+

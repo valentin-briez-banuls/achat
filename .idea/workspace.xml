@@ -4,7 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add estimated notary fees calculation and display to property details page.">
+      <change afterPath="$PROJECT_DIR$/app/javascript/controllers/mobile_menu_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/tailwind/application.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/tailwind/application.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/application_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/helpers/application_helper.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/comparisons/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/comparisons/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/dashboard/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/dashboard/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/devise/registrations/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/devise/registrations/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/devise/sessions/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/devise/sessions/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/financial_profiles/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/financial_profiles/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/financial_profiles/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/financial_profiles/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/financial_profiles/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/financial_profiles/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/households/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/households/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/households/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/layouts/application.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/application.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/offers/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/offers/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/offers/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/offers/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/_card.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/_card.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/index.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/property_criteria/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/property_criteria/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/property_criteria/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/property_criteria/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/property_criteria/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/property_criteria/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/shared/_financial_indicator.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/shared/_financial_indicator.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/shared/_navbar.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/shared/_navbar.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/simulations/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/simulations/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/simulations/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/simulations/index.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/simulations/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/simulations/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/simulations/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/simulations/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/visits/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/visits/edit.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/visits/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/visits/new.html.erb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,8 +51,8 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="chat-panel" value="Claude Sonnet 4.5" />
-      <entry key="agent-panel" value="Claude Sonnet 4.5" />
+      <entry key="chat-panel" value="Claude Sonnet 4.6" />
+      <entry key="agent-panel" value="Claude Sonnet 4.6" />
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
@@ -384,11 +418,30 @@
       <option name="project" value="LOCAL" />
       <updated>1771948012591</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Add estimated notary fees calculation and display to property details page.">
+      <option name="closed" value="true" />
+      <created>1771948322575</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1771948322575</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`." />
@@ -411,7 +464,8 @@
     <MESSAGE value="Add migration and updates to handle image URLs in properties; extend scraper, backend, and frontend integration." />
     <MESSAGE value="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic." />
     <MESSAGE value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
+    <MESSAGE value="Add estimated notary fees calculation and display to property details page." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add estimated notary fees calculation and display to property details page." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

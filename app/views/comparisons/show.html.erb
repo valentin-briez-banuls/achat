@@ -1,8 +1,8 @@
 <% content_for(:title, "Comparateur de biens") %>
 
 <div class="max-w-6xl mx-auto space-y-6">
-  <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold text-gray-900">Comparateur</h1>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Comparateur</h1>
     <%= link_to "Retour aux biens", properties_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
   </div>
 
@@ -10,25 +10,23 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead>
         <tr>
-          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase bg-gray-50 sticky left-0"></th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase bg-gray-50 sticky left-0 z-10 min-w-[120px]"></th>
           <% @properties.each do |prop| %>
-            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-900 bg-gray-50 min-w-[200px]">
-              <%= link_to prop.title.truncate(25), prop, class: "hover:text-blue-600" %>
+            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-900 bg-gray-50 min-w-[160px] sm:min-w-[200px]">
+              <%= link_to prop.title.truncate(20), prop, class: "hover:text-blue-600" %>
             </th>
           <% end %>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100">
-        <!-- Score -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Score</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Score</td>
           <% @properties.each do |prop| %>
             <td class="px-4 py-3 text-center"><%= prop.decorate.score_badge %></td>
           <% end %>
         </tr>
-        <!-- Compatibilité -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Compatibilité</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Compatibilité</td>
           <% @properties.each do |prop| %>
             <td class="px-4 py-3 text-center">
               <% if @scores[prop] %>
@@ -39,71 +37,60 @@
             </td>
           <% end %>
         </tr>
-        <!-- Prix -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Prix</td>
-          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm font-semibold"><%= currency(prop.price) %></td><% end %>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Prix</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm font-semibold whitespace-nowrap"><%= currency(prop.price) %></td><% end %>
         </tr>
-        <!-- Surface -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Surface</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Surface</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.surface %> m²</td><% end %>
         </tr>
-        <!-- Prix/m² -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Prix/m²</td>
-          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= currency(prop.price_per_sqm) %></td><% end %>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Prix/m²</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm whitespace-nowrap"><%= currency(prop.price_per_sqm) %></td><% end %>
         </tr>
-        <!-- Chambres -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Chambres</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Chambres</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.bedrooms || "—" %></td><% end %>
         </tr>
-        <!-- DPE -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">DPE</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">DPE</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center"><%= prop.decorate.energy_badge %></td><% end %>
         </tr>
-        <!-- Ville -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Ville</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Ville</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.city %></td><% end %>
         </tr>
-        <!-- Mensualité -->
         <tr class="bg-blue-50/50">
-          <td class="px-4 py-3 text-sm font-semibold text-blue-800 bg-blue-50 sticky left-0">Mensualité</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-semibold text-blue-800 bg-blue-50 sticky left-0 z-10">Mensualité</td>
           <% @properties.each do |prop| %>
             <% sim = @simulations[prop] %>
-            <td class="px-4 py-3 text-center text-sm font-bold text-blue-700"><%= sim ? currency(sim.total_monthly_payment) : "—" %></td>
+            <td class="px-4 py-3 text-center text-sm font-bold text-blue-700 whitespace-nowrap"><%= sim ? currency(sim.total_monthly_payment) : "—" %></td>
           <% end %>
         </tr>
-        <!-- Coût total crédit -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Coût total crédit</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Coût crédit</td>
           <% @properties.each do |prop| %>
             <% sim = @simulations[prop] %>
-            <td class="px-4 py-3 text-center text-sm"><%= sim ? currency(sim.total_credit_cost) : "—" %></td>
+            <td class="px-4 py-3 text-center text-sm whitespace-nowrap"><%= sim ? currency(sim.total_credit_cost) : "—" %></td>
           <% end %>
         </tr>
-        <!-- Taux endettement -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Endettement</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Endettement</td>
           <% @properties.each do |prop| %>
             <% sim = @simulations[prop] %>
             <td class="px-4 py-3 text-center"><%= sim ? sim.decorate.debt_ratio_badge : "—" %></td>
           <% end %>
         </tr>
-        <!-- PTZ -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">PTZ</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">PTZ</td>
           <% @properties.each do |prop| %>
             <% sim = @simulations[prop] %>
             <td class="px-4 py-3 text-center"><%= sim ? sim.decorate.ptz_badge : "—" %></td>
           <% end %>
         </tr>
-        <!-- Statut -->
         <tr>
-          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Statut</td>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Statut</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center"><%= prop.decorate.status_badge %></td><% end %>
         </tr>
       </tbody>
