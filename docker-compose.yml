@@ -17,7 +17,7 @@ services:
 
   app:
     build: .
-    image: ${DOCKER_IMAGE:-registry.gitlab.com/valentin-briez-banuls/achat:latest}
+    image: ${DOCKER_IMAGE:-ghcr.io/valentin-briez-banuls/achat:latest}
     depends_on:
       db:
         condition: service_healthy
@@ -30,7 +30,7 @@ services:
     volumes:
       - achat_storage:/rails/storage
     ports:
-      - "80:80"
+      - "30059:80"
     restart: unless-stopped
 
 volumes:
