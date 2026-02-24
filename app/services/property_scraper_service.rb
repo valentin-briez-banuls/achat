@@ -30,36 +30,54 @@ class PropertyScraperService
   def call
     return nil unless valid_url?
 
+    Rails.logger.info("=" * 80)
+    Rails.logger.info("PropertyScraperService: Starting scrape for #{@url}")
+    Rails.logger.info("  Options: cache=#{@use_cache}, images=#{@extract_images}, geocode=#{@geocode}, js=#{@use_javascript}")
+
     # Vérifier le cache si activé
     if @use_cache
       cached_data = check_cache
-      return cached_data if cached_data
+      if cached_data
+        Rails.logger.info("PropertyScraperService: Cache hit, returning cached data")
+        return cached_data
+      end
     end
 
     # Résoudre les redirections Jinka
     resolved_url = resolve_jinka_redirect(@url)
+    Rails.logger.info("PropertyScraperService: URL resolved to #{resolved_url}")
 
     # Extraire les données selon la source
     data = case resolved_url
     when SELOGER_PATTERN
+      Rails.logger.info("PropertyScraperService: Using SeLoger extractor")
       extract_from_seloger(resolved_url)
     when LEBONCOIN_PATTERN
+      Rails.logger.info("PropertyScraperService: Using LeBonCoin extractor")
       extract_from_leboncoin(resolved_url)
     when PAP_PATTERN
+      Rails.logger.info("PropertyScraperService: Using PAP extractor")
       extract_from_pap(resolved_url)
     when BIENICI_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Bien'ici extractor")
       extract_from_bienici(resolved_url)
     when LOGIC_IMMO_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Logic-immo extractor")
       extract_from_logic_immo(resolved_url)
     when ORPI_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Orpi extractor")
       extract_from_orpi(resolved_url)
     when CENTURY21_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Century21 extractor")
       extract_from_century21(resolved_url)
     when LAFORET_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Laforêt extractor")
       extract_from_laforet(resolved_url)
     when FIGARO_IMMO_PATTERN
+      Rails.logger.info("PropertyScraperService: Using Figaro Immo extractor")
       extract_from_figaro_immo(resolved_url)
     else
+      Rails.logger.info("PropertyScraperService: Using generic extractor")
       extract_generic(resolved_url)
     end
 
@@ -77,10 +95,17 @@ class PropertyScraperService
     # Mettre en cache si activé
     save_to_cache(data) if @use_cache
 
+    Rails.logger.info("PropertyScraperService: Extraction complete")
+    Rails.logger.info("  Data fields: #{data.keys.join(', ')}")
+    Rails.logger.info("  Images found: #{@image_urls.size}")
+    Rails.logger.info("  Errors: #{@errors.size}")
+    Rails.logger.info("=" * 80)
+
     data
   rescue StandardError => e
     @errors << "Erreur lors de l'extraction : #{e.message}"
-    Rails.logger.error("PropertyScraperService error: #{e.message}\n#{e.backtrace.join("\n")}")
+    Rails.logger.error("PropertyScraperService error: #{e.message}\n#{e.backtrace&.join("\n")}")
+    Rails.logger.info("=" * 80)
     nil
   end
 
@@ -195,33 +220,48 @@ class PropertyScraperService
   def resolve_jinka_redirect(url)
     return url unless url.match?(JINKA_REDIRECT_PATTERN)
 
-    uri = URI.parse(url)
-    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 10, read_timeout: 10) do |http|
-      request = Net::HTTP::Get.new(uri)
-      request["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-      http.request(request)
-    end
+    Rails.logger.info("PropertyScraperService: Resolving Jinka redirect for #{url}")
 
-    case response
-    when Net::HTTPRedirection
-      response["location"]
-    when Net::HTTPOK
-      # Parser le HTML pour trouver la vraie URL si nécessaire
-      body = response.body
-      # Forcer l'encodage UTF-8
-      body.force_encoding("UTF-8") if body.encoding.name == "ASCII-8BIT"
-      body = body.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+    # Suivre jusqu'à 5 redirections HTTP
+    redirect_limit = 5
+    current_url = url
 
-      if body =~ /window\.location\.href\s*=\s*["']([^"']+)["']/
-        $1
-      elsif body =~ /href=["']([^"']+)["'][^>]*>.*?Voir l'annonce/i
-        $1
-      else
-        url
+    redirect_limit.times do
+      uri = URI.parse(current_url)
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https", open_timeout: 10, read_timeout: 10) do |http|
+        request = Net::HTTP::Get.new(uri)
+        request["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        http.request(request)
       end
-    else
-      url
+
+      case response
+      when Net::HTTPRedirection
+        current_url = response["location"]
+        Rails.logger.info("PropertyScraperService: HTTP redirect to #{current_url}")
+        next
+      when Net::HTTPOK
+        # Parser le HTML pour trouver la vraie URL si nécessaire
+        body = response.body
+        body.force_encoding("UTF-8") if body.encoding.name == "ASCII-8BIT"
+        body = body.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+
+        if body =~ /window\.location\.href\s*=\s*["']([^"']+)["']/
+          current_url = $1
+          Rails.logger.info("PropertyScraperService: JS redirect to #{current_url}")
+        elsif body =~ /href=["']([^"']+)["'][^>]*>.*?Voir l'annonce/i
+          current_url = $1
+          Rails.logger.info("PropertyScraperService: Found 'Voir l'annonce' link to #{current_url}")
+        else
+          # Pas de redirection trouvée, on garde cette URL
+          break
+        end
+      else
+        break
+      end
     end
+
+    Rails.logger.info("PropertyScraperService: Final URL #{current_url}")
+    current_url
   rescue StandardError => e
     Rails.logger.error("Failed to resolve Jinka redirect: #{e.message}")
     url
@@ -383,6 +423,9 @@ class PropertyScraperService
 
   def extract_images_from_html(html, url)
     return unless @extract_images
+
+    # Ne pas extraire d'images depuis les pages de redirection Jinka
+    return if url.match?(JINKA_REDIRECT_PATTERN)
 
     extractor = PropertyImageExtractorService.new(html, url)
     images = extractor.call

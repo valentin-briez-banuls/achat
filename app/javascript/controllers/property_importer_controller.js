@@ -35,10 +35,22 @@ export default class extends Controller {
       if (response.ok && data.success) {
         this.fillForm(data.data)
 
+        // Stocker les URLs d'images dans un champ caché
+        if (data.image_urls && data.image_urls.length > 0) {
+          let imageUrlsInput = this.formTarget.querySelector('input[name="_image_urls"]')
+          if (!imageUrlsInput) {
+            imageUrlsInput = document.createElement('input')
+            imageUrlsInput.type = 'hidden'
+            imageUrlsInput.name = '_image_urls'
+            this.formTarget.appendChild(imageUrlsInput)
+          }
+          imageUrlsInput.value = JSON.stringify(data.image_urls)
+        }
+
         // Afficher un message avec les infos sur les images
         let successMessage = "Données importées avec succès !"
         if (data.images_count > 0) {
-          successMessage += ` (${data.images_count} photo${data.images_count > 1 ? 's' : ''} trouvée${data.images_count > 1 ? 's' : ''})`
+          successMessage += ` (${data.images_count} photo${data.images_count > 1 ? 's' : ''} trouvée${data.images_count > 1 ? 's' : ''} - seront téléchargées à la sauvegarde)`
         }
 
         this.showSuccess(successMessage, data.images_count)

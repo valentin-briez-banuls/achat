@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Make postal codes optional">
-      <change afterPath="$PROJECT_DIR$/VRAIE_REGLE_HCSF.md" afterDir="false" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules.">
+      <change afterPath="$PROJECT_DIR$/DIAGNOSTIC_IMAGES_JINKA.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/debug_jinka_images.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/test_image_extraction.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/test_images.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/update_hcsf_calculation.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/financial_profile.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/financial_profile.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/property_finance_simulator.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_finance_simulator.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/property_image_extractor_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_image_extractor_service.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/property_scraper_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_scraper_service.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,10 +82,10 @@
 }</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1774386000000" />
-    <option name="spentUsd" value="0.18477987" />
+    <option name="spentUsd" value="0.20506586" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="7" />
+    <option name="suspendCountdown" value="6" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="CucumberRunConfigurationType" factoryName="Cucumber">
@@ -342,7 +345,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771938578649</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules.">
+      <option name="closed" value="true" />
+      <created>1771939939786</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1771939939786</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -362,7 +373,9 @@
     <MESSAGE value="Add caching and image extraction to property scraping, introduce geocoding, and enable JavaScript rendering." />
     <MESSAGE value="Make postal codes optional" />
     <MESSAGE value="Make postal codes optional, allow empty energy and GES classes in property validations, and add data cleaning and validation logic with tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Make postal codes optional, allow empty energy and GES classes in property validations, and add data cleaning and validation logic with tests" />
+    <MESSAGE value="Install Active Storage and update validations to allow optional postal codes and empty energy/GES classes; implement data cleaning logic and tests." />
+    <MESSAGE value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

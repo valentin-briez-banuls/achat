@@ -43,10 +43,10 @@ class PropertiesController < ApplicationController
 
     # Options de scraping
     options = {
-      cache: true,
+      cache: params[:no_cache] != "true", # Permettre de forcer le bypass du cache
       images: true,
       geocode: true,
-      javascript: false # Peut être activé via un paramètre
+      javascript: params[:javascript] == "true" # Peut être activé via un paramètre
     }
 
     scraper = PropertyScraperService.new(url, options)
@@ -76,6 +76,21 @@ class PropertiesController < ApplicationController
     authorize @property
 
     if @property.save
+      # Télécharger les images si une URL de listing est fournie
+      if @property.listing_url.present? && params[:_image_urls].present?
+        begin
+          image_urls = JSON.parse(params[:_image_urls])
+          if image_urls.any?
+            Rails.logger.info("PropertiesController: Downloading #{image_urls.size} images for property #{@property.id}")
+            extractor = PropertyImageExtractorService.new(nil, @property.listing_url)
+            extractor.download_and_attach_to(@property, image_urls)
+            Rails.logger.info("PropertiesController: Successfully attached #{@property.photos.count} images")
+          end
+        rescue => e
+          Rails.logger.error("PropertiesController: Failed to download images: #{e.message}")
+        end
+      end
+
       @property.recalculate_score!
       create_default_simulation
       redirect_to @property, notice: "Bien ajouté avec succès."

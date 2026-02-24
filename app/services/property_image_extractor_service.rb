@@ -12,14 +12,20 @@ class PropertyImageExtractorService
   end
 
   def call
+    Rails.logger.info("PropertyImageExtractorService: Starting extraction from #{@url}")
+
     image_urls = extract_image_urls
-    return [] if image_urls.empty?
+
+    if image_urls.empty?
+      Rails.logger.warn("PropertyImageExtractorService: No images found")
+      return []
+    end
 
     Rails.logger.info("PropertyImageExtractorService: Found #{image_urls.size} images")
     image_urls.take(MAX_IMAGES)
   rescue StandardError => e
     @errors << "Erreur lors de l'extraction des images : #{e.message}"
-    Rails.logger.error("PropertyImageExtractorService error: #{e.message}\n#{e.backtrace.join("\n")}")
+    Rails.logger.error("PropertyImageExtractorService error: #{e.message}\n#{e.backtrace&.join("\n")}")
     []
   end
 
@@ -63,22 +69,29 @@ class PropertyImageExtractorService
     # 1. Extraire depuis JSON-LD
     json_ld = extract_json_ld(@html)
     if json_ld
-      urls.concat(extract_from_json_ld(json_ld))
+      json_urls = extract_from_json_ld(json_ld)
+      Rails.logger.info("PropertyImageExtractorService: JSON-LD found #{json_urls.size} images")
+      urls.concat(json_urls)
     end
 
     # 2. Extraire depuis les meta tags Open Graph
-    urls.concat(extract_from_meta_tags)
+    og_urls = extract_from_meta_tags
+    Rails.logger.info("PropertyImageExtractorService: Open Graph found #{og_urls.size} images")
+    urls.concat(og_urls)
 
     # 3. Extraire depuis les éléments img avec des classes spécifiques
-    urls.concat(extract_from_img_tags)
+    img_urls = extract_from_img_tags
+    Rails.logger.info("PropertyImageExtractorService: IMG tags found #{img_urls.size} images")
+    urls.concat(img_urls)
 
     # Nettoyer et dédupliquer les URLs
-    urls = urls.map { |url| normalize_url(url) }
-                .compact
-                .uniq
-                .select { |url| valid_image_url?(url) }
+    cleaned_urls = urls.map { |url| normalize_url(url) }
+                       .compact
+                       .uniq
+                       .select { |url| valid_image_url?(url) }
 
-    urls
+    Rails.logger.info("PropertyImageExtractorService: After cleaning #{cleaned_urls.size}/#{urls.size} images")
+    cleaned_urls
   end
 
   def extract_json_ld(html)
@@ -127,9 +140,22 @@ class PropertyImageExtractorService
 
     # Images avec des classes spécifiques aux annonces immobilières
     patterns = [
-      /<img[^>]*class=["'][^"']*(?:property|gallery|photo|slide|carousel)[^"']*["'][^>]*src=["']([^"']+)["']/i,
-      /<img[^>]*src=["']([^"']+)["'][^>]*class=["'][^"']*(?:property|gallery|photo|slide|carousel)[^"']*["']/i,
-      /<img[^>]*data-src=["']([^"']+)["'][^>]*class=["'][^"']*(?:property|gallery|photo|slide)[^"']*["']/i
+      # Patterns avec classe d'abord
+      /<img[^>]*class=["'][^"']*(?:property|gallery|photo|slide|carousel|annonce|bien)[^"']*["'][^>]*src=["']([^"']+)["']/i,
+      # Patterns avec src d'abord
+      /<img[^>]*src=["']([^"']+)["'][^>]*class=["'][^"']*(?:property|gallery|photo|slide|carousel|annonce|bien)[^"']*["']/i,
+      # Lazy loading avec data-src
+      /<img[^>]*data-src=["']([^"']+)["'][^>]*class=["'][^"']*(?:property|gallery|photo|slide|annonce|bien)[^"']*["']/i,
+      # Lazy loading avec data-lazy
+      /<img[^>]*data-lazy=["']([^"']+)["']/i,
+      # data-original (certains sites)
+      /<img[^>]*data-original=["']([^"']+)["']/i,
+      # srcset pour images responsives
+      /<img[^>]*srcset=["']([^"'\s]+)[^"']*["'][^>]*class=["'][^"']*(?:property|gallery|photo)[^"']*["']/i,
+      # Balises picture/source
+      /<source[^>]*srcset=["']([^"'\s]+)[^"']*["'][^>]*type=["']image/i,
+      # Divs avec background-image (moins fiable)
+      /<div[^>]*class=["'][^"']*(?:property|gallery|photo)[^"']*["'][^>]*style=["'][^"']*background-image:\s*url\(["']?([^"')]+)["']?\)/i
     ]
 
     patterns.each do |pattern|
@@ -138,6 +164,7 @@ class PropertyImageExtractorService
       end
     end
 
+    Rails.logger.debug("PropertyImageExtractorService: Extracted #{urls.size} raw img URLs")
     urls
   end
 
