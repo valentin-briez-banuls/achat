@@ -1,0 +1,140 @@
+<% content_for(:title, "Offre — #{currency(@offer.amount)}") %>
+
+<div class="max-w-2xl mx-auto space-y-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Offre — <%= currency(@offer.amount) %></h1>
+      <p class="mt-1 text-sm text-gray-500"><%= @property.title %></p>
+    </div>
+    <div class="flex gap-2 shrink-0">
+      <%= link_to "Modifier", edit_property_offer_path(@property, @offer), class: "rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+      <%= link_to "Retour au bien", @property, class: "rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+    </div>
+  </div>
+
+  <!-- Offer details -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h3 class="text-sm font-semibold text-gray-900 mb-4">Détails de l'offre</h3>
+    <dl class="space-y-3">
+      <div class="flex justify-between">
+        <dt class="text-sm text-gray-500">Montant</dt>
+        <dd class="text-sm font-bold text-gray-900"><%= currency(@offer.amount) %></dd>
+      </div>
+      <div class="flex justify-between">
+        <dt class="text-sm text-gray-500">Date</dt>
+        <dd class="text-sm font-medium"><%= l(@offer.offered_on, format: :long) %></dd>
+      </div>
+      <% if @offer.response_deadline %>
+        <div class="flex justify-between">
+          <dt class="text-sm text-gray-500">Date limite de réponse</dt>
+          <dd class="text-sm font-medium"><%= l(@offer.response_deadline, format: :long) %></dd>
+        </div>
+      <% end %>
+      <div class="flex justify-between">
+        <dt class="text-sm text-gray-500">Statut</dt>
+        <dd>
+          <% status_colors = { "en_attente" => "bg-yellow-100 text-yellow-800", "acceptee" => "bg-green-100 text-green-800", "refusee" => "bg-red-100 text-red-800", "contre_offre" => "bg-orange-100 text-orange-800", "expiree" => "bg-gray-100 text-gray-600" } %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= status_colors[@offer.status] || 'bg-gray-100 text-gray-600' %>">
+            <%= @offer.status.humanize %>
+          </span>
+        </dd>
+      </div>
+      <% if @offer.counter_offer_amount.present? %>
+        <div class="flex justify-between border-t pt-3 mt-1">
+          <dt class="text-sm text-gray-500">Contre-offre reçue</dt>
+          <dd class="text-sm font-bold text-orange-700"><%= currency(@offer.counter_offer_amount) %></dd>
+        </div>
+      <% end %>
+      <% if @offer.conditions.present? %>
+        <div class="pt-2">
+          <dt class="text-xs font-medium text-gray-500 mb-1">Conditions</dt>
+          <dd class="text-sm text-gray-700 whitespace-pre-line"><%= @offer.conditions %></dd>
+        </div>
+      <% end %>
+      <% if @offer.notes.present? %>
+        <div class="pt-1">
+          <dt class="text-xs font-medium text-gray-500 mb-1">Notes</dt>
+          <dd class="text-sm text-gray-700 whitespace-pre-line"><%= @offer.notes %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <!-- Negotiation impact -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h3 class="text-sm font-semibold text-gray-900 mb-4">Impact de la négociation</h3>
+
+    <% discount = @offer.discount_percent %>
+    <% if discount > 0 %>
+      <div class="flex items-center gap-3 mb-4 p-3 rounded-lg bg-green-50 border border-green-100">
+        <svg class="h-5 w-5 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-sm text-green-800">
+          Cette offre représente une réduction de <strong><%= discount %>%</strong>
+          par rapport au prix affiché
+          (<%= currency(@property.effective_price - @offer.amount) %> d'économie sur le prix).
+        </p>
+      </div>
+    <% elsif discount < 0 %>
+      <div class="flex items-center gap-3 mb-4 p-3 rounded-lg bg-yellow-50 border border-yellow-100">
+        <p class="text-sm text-yellow-800">
+          Cette offre est <strong><%= discount.abs %>% au-dessus</strong> du prix affiché.
+        </p>
+      </div>
+    <% else %>
+      <p class="text-sm text-gray-500 mb-4">Cette offre correspond au prix affiché.</p>
+    <% end %>
+
+    <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div class="bg-gray-50 rounded-lg p-3">
+        <dt class="text-xs text-gray-500 mb-1">Prix de vente</dt>
+        <dd class="text-sm font-bold text-gray-900"><%= currency(@offer.amount) %></dd>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3">
+        <dt class="text-xs text-gray-500 mb-1">Prix affiché</dt>
+        <dd class="text-sm font-medium text-gray-600"><%= currency(@property.effective_price) %></dd>
+      </div>
+      <% if @offer_notary_fees %>
+        <div class="bg-gray-50 rounded-lg p-3">
+          <dt class="text-xs text-gray-500 mb-1">Frais de notaire est.</dt>
+          <dd class="text-sm font-medium text-gray-700"><%= currency(@offer_notary_fees) %></dd>
+        </div>
+      <% end %>
+      <% if @offer_monthly %>
+        <div class="bg-blue-50 rounded-lg p-3">
+          <dt class="text-xs text-blue-500 mb-1">Mensualité estimée</dt>
+          <dd class="text-sm font-bold text-blue-800"><%= currency(@offer_monthly) %>/mois</dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <% if @offer_debt_ratio %>
+      <div class="mt-4 flex items-center gap-3">
+        <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <% bar_color = @offer_debt_ratio > 35 ? "bg-red-500" : @offer_debt_ratio > 30 ? "bg-yellow-400" : "bg-green-500" %>
+          <div class="<%= bar_color %> h-2 rounded-full transition-all" style="width: <%= [@offer_debt_ratio, 100].min %>%"></div>
+        </div>
+        <span class="text-sm font-semibold <%= @offer_debt_ratio > 35 ? "text-red-600" : @offer_debt_ratio > 30 ? "text-yellow-600" : "text-green-600" %>">
+          <%= @offer_debt_ratio %>% d'endettement
+        </span>
+        <% if @offer_debt_ratio > 35 %>
+          <span class="text-xs text-red-500">(> seuil HCSF 35%)</span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% unless @offer_monthly %>
+      <p class="mt-3 text-xs text-gray-400">
+        Complétez votre profil financier (taux, durée, apport) pour voir les indicateurs de financement.
+      </p>
+    <% end %>
+  </div>
+
+  <!-- Simulator link -->
+  <div class="text-center">
+    <%= link_to "Simuler d'autres scénarios de négociation", property_negotiation_path(@property),
+        class: "inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-500 font-medium" %>
+  </div>
+</div>

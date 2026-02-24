@@ -16,9 +16,12 @@ Rails.application.routes.draw do
     collection do
       post :import_from_url
     end
+    resource :negotiation, only: [:show] do
+      post :calculate, on: :member
+    end
     resources :simulations
     resources :visits, except: [:index, :show]
-    resources :offers, except: [:index, :show]
+    resources :offers, except: [:index]
   end
 
   # Comparator

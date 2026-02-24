@@ -1,12 +1,32 @@
 class OffersController < ApplicationController
   before_action :require_household!
   before_action :set_property
-  before_action :set_offer, only: [:edit, :update, :destroy]
+  before_action :set_offer, only: [:show, :edit, :update, :destroy]
+
+  def show
+    authorize @offer
+    profile = current_household.financial_profile
+    if profile&.proposed_rate.present? && @offer.amount.positive?
+      notary = NotaryFeeCalculator.new(price: @offer.amount, condition: @property.condition)
+      loan_amount = [@offer.amount + notary.total - profile.personal_contribution, 0].max
+      if loan_amount.positive?
+        loan = LoanCalculator.new(
+          principal: loan_amount,
+          annual_rate: profile.proposed_rate,
+          duration_years: profile.desired_duration_years
+        )
+        @offer_monthly    = loan.monthly_payment
+        @offer_debt_ratio = profile.total_monthly_income > 0 ?
+          (@offer_monthly / profile.total_monthly_income * 100).round(1) : nil
+      end
+      @offer_notary_fees = notary.total
+    end
+  end
 
   def new
     @offer = @property.offers.build(
       offered_on: Date.current,
-      amount: @property.price
+      amount: params.dig(:offer, :amount) || @property.price
     )
     authorize @offer
   end

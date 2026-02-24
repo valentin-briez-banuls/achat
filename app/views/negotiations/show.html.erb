@@ -1,0 +1,181 @@
+<% content_for(:title, "Négociation — #{@property.title}") %>
+
+<div class="max-w-5xl mx-auto space-y-6"
+     data-controller="negotiation"
+     data-negotiation-base-price-value="<%= @property.effective_price.to_i %>"
+     data-negotiation-rate-value="<%= @rate %>"
+     data-negotiation-condition-value="<%= @property.condition %>"
+     data-negotiation-income-value="<%= @profile&.total_monthly_income.to_f %>"
+     data-negotiation-new-offer-path-value="<%= new_property_offer_path(@property) %>">
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Simulateur de négociation</h1>
+      <p class="mt-1 text-sm text-gray-500">
+        <%= @property.title %> &middot; Prix affiché&nbsp;: <strong><%= currency(@property.effective_price) %></strong>
+      </p>
+    </div>
+    <%= link_to "Retour au bien", @property, class: "shrink-0 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+  </div>
+
+  <!-- Inputs -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-6">
+    <h3 class="text-sm font-semibold text-gray-900">Paramètres de la simulation</h3>
+
+    <!-- Discount slider -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-sm font-medium text-gray-700">Réduction négociée</label>
+        <span class="text-lg font-bold text-indigo-600" data-negotiation-target="discountDisplay">0%</span>
+      </div>
+      <input type="range" min="0" max="15" step="0.5" value="0"
+             class="w-full h-2 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+             data-negotiation-target="discountSlider"
+             data-action="input->negotiation#onDiscountChange">
+      <div class="flex justify-between text-xs text-gray-400 mt-1">
+        <span>0%</span><span>5%</span><span>10%</span><span>15%</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <!-- Contribution -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Apport personnel (€)</label>
+        <input type="number" value="<%= @contribution %>" step="1000" min="0"
+               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+               data-negotiation-target="contribution"
+               data-action="input->negotiation#onChange">
+      </div>
+
+      <!-- Duration radio buttons -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Durée du prêt</label>
+        <div class="flex flex-wrap gap-2">
+          <% [10, 15, 20, 25, 30].each do |d| %>
+            <label class="flex items-center">
+              <input type="radio" name="negotiation_duration" value="<%= d %>"
+                     <%= 'checked' if d == @duration %>
+                     class="sr-only peer"
+                     data-negotiation-target="duration"
+                     data-action="change->negotiation#onChange">
+              <span class="px-3 py-1.5 rounded-lg text-sm font-medium border cursor-pointer
+                           border-gray-200 text-gray-600 hover:border-indigo-400
+                           peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
+                <%= d %> ans
+              </span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% unless @profile&.proposed_rate %>
+      <p class="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+        Aucun taux proposé dans votre profil financier. Le taux par défaut de <%= @rate %>% est utilisé.
+      </p>
+    <% end %>
+  </div>
+
+  <!-- Custom scenario highlight card -->
+  <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-semibold text-indigo-900">
+        Votre scénario&nbsp;: <span data-negotiation-target="customDiscountLabel" class="text-indigo-600">Prix affiché</span>
+      </h3>
+    </div>
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+      <div>
+        <p class="text-xs text-indigo-500 mb-0.5">Prix d'achat</p>
+        <p class="text-base font-bold text-indigo-900" data-negotiation-target="customPrice">—</p>
+      </div>
+      <div>
+        <p class="text-xs text-indigo-500 mb-0.5">Mensualité</p>
+        <p class="text-base font-bold text-indigo-900" data-negotiation-target="customMonthly">—</p>
+      </div>
+      <div>
+        <p class="text-xs text-indigo-500 mb-0.5">Taux d'endettement</p>
+        <p class="text-base font-bold text-indigo-900" data-negotiation-target="customDebtRatio">—</p>
+      </div>
+      <div>
+        <p class="text-xs text-indigo-500 mb-0.5">Coût total crédit</p>
+        <p class="text-base font-bold text-indigo-900" data-negotiation-target="customCreditCost">—</p>
+      </div>
+      <div>
+        <p class="text-xs text-indigo-500 mb-0.5">Frais de notaire</p>
+        <p class="text-base font-bold text-indigo-900" data-negotiation-target="customNotary">—</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h3 class="text-sm font-semibold text-gray-900 mb-4">Comparaison des scénarios</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-200">
+            <th class="text-left text-xs font-medium text-gray-500 py-2 pr-4">Métrique</th>
+            <th class="text-right text-xs font-medium text-gray-700 py-2 px-3 bg-gray-50 rounded-t">Prix affiché</th>
+            <th class="text-right text-xs font-medium text-gray-600 py-2 px-3">−3%</th>
+            <th class="text-right text-xs font-medium text-gray-600 py-2 px-3">−5%</th>
+            <th class="text-right text-xs font-medium text-gray-600 py-2 px-3">−8%</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr>
+            <td class="py-2 pr-4 text-xs text-gray-500">Prix d'achat</td>
+            <td class="py-2 px-3 text-right font-medium bg-gray-50" data-negotiation-target="price">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="price">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="price">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="price">—</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 text-xs text-gray-500">Mensualité</td>
+            <td class="py-2 px-3 text-right font-medium bg-gray-50" data-negotiation-target="monthly">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="monthly">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="monthly">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="monthly">—</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 text-xs text-gray-500">Taux d'endettement</td>
+            <td class="py-2 px-3 text-right font-medium bg-gray-50" data-negotiation-target="debtRatio">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="debtRatio">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="debtRatio">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="debtRatio">—</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 text-xs text-gray-500">Coût total crédit</td>
+            <td class="py-2 px-3 text-right font-medium bg-gray-50" data-negotiation-target="creditCost">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="creditCost">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="creditCost">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="creditCost">—</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 text-xs text-gray-500">Frais de notaire</td>
+            <td class="py-2 px-3 text-right font-medium bg-gray-50" data-negotiation-target="notaryFees">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="notaryFees">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="notaryFees">—</td>
+            <td class="py-2 px-3 text-right font-medium" data-negotiation-target="notaryFees">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-3 text-xs text-gray-400">
+      Frais de notaire estimés à <%= @property.ancien? ? "7,5%" : "2,5%" %> (<%= @property.condition %>) — mensualité hors assurance emprunteur.
+    </p>
+  </div>
+
+  <!-- Footer: create offer shortcut -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-green-50 rounded-xl border border-green-200 p-5">
+    <div>
+      <p class="text-sm font-medium text-green-800">Prêt à soumettre votre offre ?</p>
+      <p class="text-xs text-green-600 mt-0.5">Le montant sera pré-rempli avec votre scénario sélectionné.</p>
+    </div>
+    <a href="<%= new_property_offer_path(@property) %>"
+       data-negotiation-target="offerLink"
+       class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 whitespace-nowrap">
+      Créer une offre à <span data-negotiation-target="offerPrice">—</span>
+    </a>
+  </div>
+</div>

@@ -13,6 +13,7 @@
     </div>
     <div class="flex flex-wrap items-center gap-2 shrink-0">
       <%= link_to "Modifier", edit_property_path(@property), class: "rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+      <%= link_to "Négocier", property_negotiation_path(@property), class: "rounded-lg bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100" %>
       <%= link_to "Simuler", new_property_simulation_path(@property), class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-500" %>
     </div>
   </div>
@@ -179,6 +180,7 @@
       <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-3">
         <h3 class="text-sm font-semibold text-gray-900 mb-2">Actions</h3>
         <%= link_to "Planifier une visite", new_property_visit_path(@property), class: "block w-full text-center rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100" %>
+        <%= link_to "Simuler la négociation", property_negotiation_path(@property), class: "block w-full text-center rounded-lg bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100" %>
         <%= link_to "Faire une offre", new_property_offer_path(@property), class: "block w-full text-center rounded-lg bg-green-50 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-100" %>
         <% if @property.listing_url.present? %>
           <%= link_to "Voir l'annonce", @property.listing_url, target: "_blank", rel: "noopener", class: "block w-full text-center rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
@@ -208,7 +210,7 @@
           <ul class="space-y-2">
             <% @offers.each do |offer| %>
               <li class="text-sm flex justify-between">
-                <span class="text-gray-600"><%= currency(offer.amount) %></span>
+                <%= link_to currency(offer.amount), property_offer_path(@property, offer), class: "text-blue-600 hover:underline" %>
                 <span class="font-medium"><%= offer.status.humanize %></span>
               </li>
             <% end %>
