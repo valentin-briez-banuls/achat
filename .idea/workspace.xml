@@ -26,9 +26,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="chore(docker-compose.yml): update Docker image registry and change exposed port">
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-docker.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/cable_schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/cable_schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,26 +78,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ruby.structure.view.model.defaults.configured": "true",
-    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
-    "settings.editor.splitter.proportion": "0.29765546",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.29765546&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1774386000000" />
     <option name="spentUsd" value="0.28356406" />
@@ -538,7 +539,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771970854157</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features.">
+      <option name="closed" value="true" />
+      <created>1771973345797</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1771973345797</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,9 +565,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Improve Jinka error handling and property image extraction: add Century21 image support, enhance property scraper with known site link detection, and update importer's frontend logic." />
-    <MESSAGE value="Add migration and updates to handle image URLs in properties; extend scraper, backend, and frontend integration." />
-    <MESSAGE value="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic." />
     <MESSAGE value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
     <MESSAGE value="Add estimated notary fees calculation and display to property details page." />
     <MESSAGE value="Update UI for consistency and responsive behavior across forms, lists, and navigation components." />
@@ -581,6 +587,9 @@
     <MESSAGE value="chore(docker-compose.yml): update Docker image configuration and build context" />
     <MESSAGE value="feat(build-docker.yml): add GitHub Actions workflow for building and pushing Docker images" />
     <MESSAGE value="chore(docker-compose.yml): update Docker image registry and change exposed port" />
+    <MESSAGE value="fix(db/cable_schema.rb): add #hello comment" />
+    <MESSAGE value="feat(db/cable_schema.rb): add #hello comment" />
+    <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
