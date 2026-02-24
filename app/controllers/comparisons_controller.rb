@@ -16,11 +16,11 @@ class ComparisonsController < ApplicationController
       .includes(:property_score, :simulations)
 
     @simulations = @properties.map do |prop|
-      [prop, prop.simulations.order(:created_at).last]
+      [ prop, prop.simulations.order(:created_at).last ]
     end.to_h
 
     @scores = @properties.map do |prop|
-      [prop, prop.property_score]
+      [ prop, prop.property_score ]
     end.to_h
   end
 end
