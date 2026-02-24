@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/properties_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/properties_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/property_scraper_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_scraper_service.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/properties/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/properties/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/show.html.erb" afterDir="false" />
-    </list>
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -382,7 +376,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771945813491</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging.">
+      <option name="closed" value="true" />
+      <created>1771948012591</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1771948012591</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -408,7 +410,8 @@
     <MESSAGE value="Improve Jinka error handling and property image extraction: add Century21 image support, enhance property scraper with known site link detection, and update importer's frontend logic." />
     <MESSAGE value="Add migration and updates to handle image URLs in properties; extend scraper, backend, and frontend integration." />
     <MESSAGE value="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic." />
-    <option name="LAST_COMMIT_MESSAGE" value="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic." />
+    <MESSAGE value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

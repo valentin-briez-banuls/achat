@@ -52,6 +52,7 @@ class PropertiesController < ApplicationController
     @simulations = @property.simulations.order(:created_at)
     @visits = @property.visits.order(scheduled_at: :desc)
     @offers = @property.offers.order(offered_on: :desc)
+    @notary_fees = NotaryFeeCalculator.new(price: @property.effective_price, condition: @property.condition).call
   end
 
   def new

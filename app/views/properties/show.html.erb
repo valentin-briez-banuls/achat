@@ -56,6 +56,38 @@
         </dl>
       </div>
 
+      <!-- Frais de notaire -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-gray-900">Frais de notaire estimés</h3>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            ~<%= @notary_fees[:percentage] %>% du prix
+          </span>
+        </div>
+        <div class="text-center mb-4">
+          <p class="text-2xl font-bold text-gray-900"><%= currency(@notary_fees[:total]) %></p>
+          <p class="text-xs text-gray-500 mt-1">sur un prix effectif de <%= currency(@property.effective_price) %></p>
+        </div>
+        <dl class="space-y-2 border-t border-gray-100 pt-3">
+          <div class="flex justify-between text-sm">
+            <dt class="text-gray-500">Droits de mutation</dt>
+            <dd class="font-medium"><%= currency(@notary_fees[:droits_mutation]) %></dd>
+          </div>
+          <div class="flex justify-between text-sm">
+            <dt class="text-gray-500">Émoluments notaire</dt>
+            <dd class="font-medium"><%= currency(@notary_fees[:emoluments]) %></dd>
+          </div>
+          <div class="flex justify-between text-sm">
+            <dt class="text-gray-500">Contribution sécurité</dt>
+            <dd class="font-medium"><%= currency(@notary_fees[:contribution_securite]) %></dd>
+          </div>
+          <div class="flex justify-between text-sm">
+            <dt class="text-gray-500">Débours</dt>
+            <dd class="font-medium"><%= currency(@notary_fees[:debours]) %></dd>
+          </div>
+        </dl>
+      </div>
+
       <!-- Characteristics -->
       <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <h3 class="text-sm font-semibold text-gray-900 mb-4">Caractéristiques</h3>
