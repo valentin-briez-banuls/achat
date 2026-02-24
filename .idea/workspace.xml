@@ -26,11 +26,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-    </list>
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -547,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771973345797</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059">
+      <option name="closed" value="true" />
+      <created>1771974112506</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1771974112506</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -565,7 +569,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactor property scraper: modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging." />
     <MESSAGE value="Add estimated notary fees calculation and display to property details page." />
     <MESSAGE value="Update UI for consistency and responsive behavior across forms, lists, and navigation components." />
     <MESSAGE value="Trigger property image downloads after update and improve comparison validation logic." />
@@ -590,7 +593,8 @@
     <MESSAGE value="fix(db/cable_schema.rb): add #hello comment" />
     <MESSAGE value="feat(db/cable_schema.rb): add #hello comment" />
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
