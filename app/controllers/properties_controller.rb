@@ -53,6 +53,7 @@ class PropertiesController < ApplicationController
     @visits = @property.visits.order(scheduled_at: :desc)
     @offers = @property.offers.order(offered_on: :desc)
     @notary_fees = NotaryFeeCalculator.new(price: @property.effective_price, condition: @property.condition).call
+    @price_history = @property.price_histories.order(:scraped_at)
   end
 
   def new
@@ -111,6 +112,7 @@ class PropertiesController < ApplicationController
     authorize @property
 
     if @property.save
+      @property.record_price_history!(source: "manual")
       @property.recalculate_score!
       create_default_simulation
       redirect_to @property, notice: "Bien ajouté avec succès."
@@ -127,6 +129,7 @@ class PropertiesController < ApplicationController
     authorize @property
 
     if @property.update(property_params)
+      @property.record_price_history!(source: "manual")
       @property.recalculate_score!
       DownloadPropertyImagesJob.perform_later(@property.id) if @property.parsed_image_urls.any?
       redirect_to @property, notice: "Bien mis à jour."

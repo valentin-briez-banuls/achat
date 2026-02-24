@@ -36,6 +36,13 @@
       <span class="text-base sm:text-lg font-bold text-gray-900 tabular-nums"><%= prop.formatted_price %></span>
       <span class="text-xs text-gray-500"><%= prop.formatted_price_per_sqm %></span>
     </div>
+    <% if property.price_dropped? %>
+      <div class="mt-1">
+        <span class="inline-flex items-center gap-0.5 text-xs font-medium text-amber-700">
+          ↓ -<%= property.price_drop_percentage %>% depuis la mise en ligne
+        </span>
+      </div>
+    <% end %>
 
     <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
       <span><%= prop.formatted_surface %></span>

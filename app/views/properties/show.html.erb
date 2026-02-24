@@ -39,12 +39,30 @@
       <!-- Price & Stats -->
       <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div><p class="text-xs text-gray-500">Prix</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_price %></p></div>
+          <div>
+            <p class="text-xs text-gray-500">Prix</p>
+            <p class="text-xl font-bold text-gray-900"><%= prop.formatted_price %></p>
+            <% if @property.price_dropped? %>
+              <span class="inline-flex items-center gap-0.5 text-xs font-medium text-amber-700 mt-0.5">
+                ↓ -<%= @property.price_drop_percentage %>% depuis la mise en ligne
+              </span>
+            <% end %>
+          </div>
           <div><p class="text-xs text-gray-500">Surface</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_surface %></p></div>
           <div><p class="text-xs text-gray-500">Prix/m²</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_price_per_sqm %></p></div>
           <div><p class="text-xs text-gray-500">Chambres</p><p class="text-xl font-bold text-gray-900"><%= @property.bedrooms || "—" %></p></div>
         </div>
       </div>
+
+      <!-- Price History -->
+      <% if @price_history.size >= 2 %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-4">Historique des prix</h3>
+          <%= line_chart @price_history.map { |h| [h.scraped_at.strftime("%d/%m/%Y"), h.price] },
+              height: "150px", suffix: " €", colors: ["#f59e0b"],
+              library: { scales: { y: { ticks: { callback: nil } } } } %>
+        </div>
+      <% end %>
 
       <!-- Financial Details -->
       <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">

@@ -4,6 +4,7 @@ class Property < ApplicationRecord
   has_many :simulations, dependent: :destroy
   has_many :visits, dependent: :destroy
   has_many :offers, dependent: :destroy
+  has_many :price_histories, class_name: "PropertyPriceHistory", dependent: :destroy
   has_many_attached :photos
 
   # Parse les URLs d'images depuis JSON
@@ -62,6 +63,24 @@ class Property < ApplicationRecord
 
   def energy_class_rank
     ENERGY_CLASSES.index(energy_class) || 99
+  end
+
+  def price_drop_percentage
+    history = price_histories.order(:scraped_at).to_a
+    return nil if history.size < 2
+    first_price = history.first.price
+    last_price  = history.last.price
+    ((first_price - last_price).to_f / first_price * 100).round(1)
+  end
+
+  def price_dropped?
+    price_drop_percentage&.positive?
+  end
+
+  def record_price_history!(source: "manual")
+    last = price_histories.order(:scraped_at).last
+    return if last && last.price == price
+    price_histories.create!(price: price, scraped_at: Time.current, source: source)
   end
 
   def recalculate_score!

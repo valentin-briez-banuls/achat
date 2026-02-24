@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_142836) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -157,6 +157,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_142836) do
     t.index ["household_id"], name: "index_property_criteria_on_household_id", unique: true
   end
 
+  create_table "property_price_histories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "price", null: false
+    t.bigint "property_id", null: false
+    t.datetime "scraped_at", null: false
+    t.string "source", default: "manual", null: false
+    t.datetime "updated_at", null: false
+    t.index ["property_id", "scraped_at"], name: "index_property_price_histories_on_property_id_and_scraped_at"
+    t.index ["property_id"], name: "index_property_price_histories_on_property_id"
+  end
+
   create_table "property_scores", force: :cascade do |t|
     t.integer "bedrooms_score", default: 0
     t.integer "brightness_score", default: 0
@@ -256,6 +267,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_142836) do
   add_foreign_key "offers", "properties"
   add_foreign_key "properties", "households"
   add_foreign_key "property_criteria", "households"
+  add_foreign_key "property_price_histories", "properties"
   add_foreign_key "property_scores", "properties"
   add_foreign_key "simulations", "properties"
   add_foreign_key "users", "households"

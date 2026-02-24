@@ -7,6 +7,7 @@ class DashboardController < ApplicationController
     @financial_profile = current_household.financial_profile
     @criteria = current_household.property_criterion
     @properties = current_household.properties.includes(:property_score).by_score.limit(10)
+    @price_drops_count = current_household.properties.includes(:price_histories).count(&:price_dropped?)
     @upcoming_visits = Visit.joins(:property)
                             .where(properties: { household_id: current_household.id })
                             .upcoming.limit(5)
