@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resource :financial_profile, only: [:show, :new, :create, :edit, :update]
 
   # Property criteria (singleton per household)
-  resource :property_criterion, only: [:show, :new, :create, :edit, :update]
+  resource :property_criterion, controller: "property_criteria", only: [:show, :new, :create, :edit, :update]
 
   # Properties
   resources :properties do
