@@ -16,7 +16,8 @@ services:
     restart: unless-stopped
 
   app:
-    image: ${DOCKER_IMAGE:-registry.gitlab.com/VOTRE_UTILISATEUR/achat:latest}
+    build: .
+    image: ${DOCKER_IMAGE:-registry.gitlab.com/valentin-briez-banuls/achat:latest}
     depends_on:
       db:
         condition: service_healthy

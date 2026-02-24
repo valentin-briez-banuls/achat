@@ -7,7 +7,7 @@
           <value>
             <AIAssistantStoredInstruction>
               <option name="actionId" value="AIAssistant.VCS.GenerateCommitMessage" />
-              <option name="content" value="Generate a git commit message in the following format:&#10;&#10;&lt;type&gt;(&lt;scope&gt;): &lt;short description&gt;&#10;&#10;Types allowed:&#10;- feat: new feature&#10;- fix: bug fix&#10;- remove: removed code or files&#10;- refactor: code refactoring without behavior change&#10;- style: formatting, missing semicolons, etc&#10;- docs: documentation changes&#10;- test: adding or updating tests&#10;- chore: build process, dependencies updates&#10;&#10;Then add a bullet list of ALL changes detailing exactly what was added, fixed, removed or refactored:&#10;&#10;- [ADD] ...&#10;- [FIX] ...&#10;- [REMOVE] ...&#10;- [REFACTOR] ...&#10;&#10;Rules:&#10;- Be concise and precise&#10;- List EVERY changed file or function&#10;- Use imperative mood (&quot;add&quot; not &quot;added&quot;)&#10;- Never leave the list empty" />
+              <option name="content" value="You are a git commit message generator. &#10;Analyze ONLY the staged diff provided and generate ONE single commit message.&#10;&#10;Format:&#10;&lt;type&gt;(&lt;file&gt;): &lt;short description&gt;&#10;&#10;- [ADD] ...&#10;- [FIX] ...&#10;- [REMOVE] ...&#10;- [REFACTOR] ...&#10;&#10;Rules:&#10;- Generate ONLY ONE commit message, never multiple&#10;- Base yourself ONLY on the diff, ignore any other context&#10;- Be concise and precise&#10;- Use imperative mood" />
             </AIAssistantStoredInstruction>
           </value>
         </entry>
@@ -18,7 +18,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created the corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features.&#10;&#10;**feat(.idea/workspace.xml): add negotiation simulator and update offers controller to handle loan calculations**&#10;&#10;- [ADD] Added a negotiation simulator feature to offers controller.&#10;- [FIX] Updated `offers_controller` to handle loan calculations.&#10;&#10;**fix(README.md): update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters**&#10;&#10;- [REFACTOR] Adjusted the `.gitignore` file to include feature documents and CLAUDE.md.&#10;- [REFACOTR] Updated workspace configuration to ensure proper project setup.&#10;- [CHORE] Incremented the local task counter from 23 to 25.&#10;&#10;**refactor(rake_task.rb): add rake task to enqueue property image downloads and processing in background**&#10;&#10;- [REFACTOR] Modularized URL data extraction in the scraper.&#10;- [REFACTOR] Added stricter validations for property URLs.&#10;- [REFACTOR] Enhanced Jinka and agency-specific handling in the scraper.&#10;- [REFACOTR] Improved error logging in the scraper.&#10;&#10;**fix(offers_controller.rb): trigger property image downloads after update and improve comparison validation logic**&#10;&#10;- [FIX] Triggered property image downloads after updates to ensure visual consistency.&#10;- [REFACTOR] Updated comparison validation logic to handle various edge cases more effectively.&#10;&#10;**feat(ui/styles.css): add estimated notary fees calculation and display to property details page**&#10;&#10;- [ADD] Added CSS styles for displaying estimated notary fees on the property details page.&#10;&#10;**refactor(property_scraper.rb): parse structured information from property titles to improve data extraction accuracy**&#10;&#10;- [REFACOTR] Enhanced scraper with title-based price, surface, rooms, bedrooms, and city fallback logic.&#10;- [REFACTOR] Improved Jinka and agency-specific handling in the scraper.&#10;&#10;**refactor(db/migrate/20190831154516_create_property_price_history.rb): handle image URLs in properties**&#10;&#10;- [REFACTOR] Extended scraper, backend, and frontend integration to manage image URLs efficiently.&#10;- [REFACOTR] Updated migration to accommodate new data requirements for property images." />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="style: format code for consistency and readability in controllers">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,14 +76,14 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "ruby.structure.view.model.defaults.configured": "true",
-    "settings.editor.selected.configurable": "ml.llm.AIAssistantPromptsLibrary",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -470,7 +472,39 @@
       <option name="project" value="LOCAL" />
       <updated>1771967787757</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="**feat(app/models/property_price_history.rb, db/migrate/20190831154516_create_property_price_history.rb): add `PropertyPriceHistory` model, migration**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.">
+      <option name="closed" value="true" />
+      <created>1771968532359</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1771968532359</updated>
+    </task>
+    <task id="LOCAL-00028" summary="**feat(.gitlab-ci.yml): configure CI pipeline for build process**">
+      <option name="closed" value="true" />
+      <created>1771968540136</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1771968540136</updated>
+    </task>
+    <task id="LOCAL-00029" summary="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features.">
+      <option name="closed" value="true" />
+      <created>1771968571585</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1771968571585</updated>
+    </task>
+    <task id="LOCAL-00030" summary="style: format code for consistency and readability in controllers">
+      <option name="closed" value="true" />
+      <created>1771969381648</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1771969381648</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -488,14 +522,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Initialize database schema and migrations for core models including households, properties, offers, simulations, and related associations." />
-    <MESSAGE value="Adjust workspace configuration and add Pagy initializer" />
-    <MESSAGE value="Implement responsive and localized authentication views with Tailwind CSS, including registration, login, password management, and profile editing." />
-    <MESSAGE value="Add property import feature with URL scraping, including controller action, service, and frontend updates." />
-    <MESSAGE value="Enhance property scraping: parse structured info from titles, including city, price, surface, rooms, and bedrooms; add generic extractors for bedrooms, postal codes, and property types. Update test page documentation." />
-    <MESSAGE value="Add caching and image extraction to property scraping, introduce geocoding, and enable JavaScript rendering." />
-    <MESSAGE value="Make postal codes optional" />
-    <MESSAGE value="Make postal codes optional, allow empty energy and GES classes in property validations, and add data cleaning and validation logic with tests" />
     <MESSAGE value="Install Active Storage and update validations to allow optional postal codes and empty energy/GES classes; implement data cleaning logic and tests." />
     <MESSAGE value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
     <MESSAGE value="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps." />
@@ -513,7 +539,15 @@
     <MESSAGE value="Refactor property scraper and add migrations for handling image URLs in properties. Enhance data extraction accuracy and improve error logging." />
     <MESSAGE value="feat(PropertyPriceHistory): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection&#10;&#10;- [ADD] models/property_price_history.rb&#10;- [ADD] migrations/20231001234567_create_property_price_histories.rb&#10;- [ADD] views/property_price_histories/index.html.erb&#10;- [ADD] views/property_price_histories/show.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] views/properties/show.html.erb&#10;&#10;feat(negotiation_simulator): add negotiation simulator and update offers controller to handle loan calculations&#10;&#10;- [ADD] models/negotiation_simulator.rb&#10;- [ADD] controllers/offers_controller.rb&#10;- [ADD] specs/models/negotiation_simulator_spec.rb&#10;- [FIX] views/offers/new.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] services/loan_calculator_service.rb&#10;&#10;feat(.gitignore): update to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters&#10;&#10;- [ADD] .gitignore&#10;- [ADD] features/&#10;- [ADD] CLAUDE.md&#10;- [FIX] .github/workflows/gitlab-ci.yml&#10;- [FIX] .env.example&#10;- [FIX] tasks/local_tasks.rb&#10;&#10;feat(rake): add rake task to enqueue property image downloads and processing in background&#10;&#10;- [ADD] lib/tasks/property_images.rake&#10;- [ADD] db/migrate/20231010123456_add_property_image_processing_queue.rb&#10;- [FIX] controllers/properties_controller.rb&#10;&#10;feat(property scraper): refactor to modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging&#10;&#10;- [REFACTOR] scrapers/property_scraper.rb&#10;- [ADD] specs/scrapers/property_scraper_spec.rb&#10;- [FIX] scrapers/jinka_property_scraper.rb&#10;- [FIX] scrapers/agency_property_scraper.rb&#10;- [FIX] lib/error_logger.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property scraper): parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic&#10;&#10;- [ADD] scrapers/title_parser.rb&#10;- [ADD] specs/scrapers/title_parser_spec.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property images): add migration to handle image URLs in properties; extend scraper, backend, and frontend integration&#10;&#10;- [ADD] models/image.rb&#10;- [ADD] migrations/20231015123456_add_image_urls_to_properties.rb&#10;- [ADD] scrapers/property_scraper.rb&#10;- [ADD] app/controllers/images_controller.rb&#10;- [ADD] spec/rails_helper.rb&#10;- [FIX] views/images/index.html.erb" />
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created the corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features.&#10;&#10;**feat(.idea/workspace.xml): add negotiation simulator and update offers controller to handle loan calculations**&#10;&#10;- [ADD] Added a negotiation simulator feature to offers controller.&#10;- [FIX] Updated `offers_controller` to handle loan calculations.&#10;&#10;**fix(README.md): update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters**&#10;&#10;- [REFACTOR] Adjusted the `.gitignore` file to include feature documents and CLAUDE.md.&#10;- [REFACOTR] Updated workspace configuration to ensure proper project setup.&#10;- [CHORE] Incremented the local task counter from 23 to 25.&#10;&#10;**refactor(rake_task.rb): add rake task to enqueue property image downloads and processing in background**&#10;&#10;- [REFACTOR] Modularized URL data extraction in the scraper.&#10;- [REFACTOR] Added stricter validations for property URLs.&#10;- [REFACTOR] Enhanced Jinka and agency-specific handling in the scraper.&#10;- [REFACOTR] Improved error logging in the scraper.&#10;&#10;**fix(offers_controller.rb): trigger property image downloads after update and improve comparison validation logic**&#10;&#10;- [FIX] Triggered property image downloads after updates to ensure visual consistency.&#10;- [REFACTOR] Updated comparison validation logic to handle various edge cases more effectively.&#10;&#10;**feat(ui/styles.css): add estimated notary fees calculation and display to property details page**&#10;&#10;- [ADD] Added CSS styles for displaying estimated notary fees on the property details page.&#10;&#10;**refactor(property_scraper.rb): parse structured information from property titles to improve data extraction accuracy**&#10;&#10;- [REFACOTR] Enhanced scraper with title-based price, surface, rooms, bedrooms, and city fallback logic.&#10;- [REFACTOR] Improved Jinka and agency-specific handling in the scraper.&#10;&#10;**refactor(db/migrate/20190831154516_create_property_price_history.rb): handle image URLs in properties**&#10;&#10;- [REFACTOR] Extended scraper, backend, and frontend integration to manage image URLs efficiently.&#10;- [REFACOTR] Updated migration to accommodate new data requirements for property images." />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Generating commit message..." />
+    <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created the corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
+    <MESSAGE value="`feat(.env.example): provide example configuration values for application settings`" />
+    <MESSAGE value="**feat(app/models/property_price_history.rb, db/migrate/20190831154516_create_property_price_history.rb): add `PropertyPriceHistory` model, migration**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema." />
+    <MESSAGE value="**feat(.gitlab-ci.yml): configure CI pipeline for build process**" />
+    <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
+    <MESSAGE value="-" />
+    <MESSAGE value="style: format code for consistency and readability in controllers" />
+    <option name="LAST_COMMIT_MESSAGE" value="style: format code for consistency and readability in controllers" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
