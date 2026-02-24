@@ -6,6 +6,19 @@ class Property < ApplicationRecord
   has_many :offers, dependent: :destroy
   has_many_attached :photos
 
+  # Parse les URLs d'images depuis JSON
+  def parsed_image_urls
+    return [] if image_urls.blank?
+    JSON.parse(image_urls)
+  rescue JSON::ParserError
+    []
+  end
+
+  # Vérifie si le bien a des images (attachées OU des URLs)
+  def has_images?
+    photos.attached? || parsed_image_urls.any?
+  end
+
   enum :property_type, { appartement: 0, maison: 1, terrain: 2, loft: 3, duplex: 4 }
   enum :condition, { ancien: 0, neuf: 1 }
   enum :status, {

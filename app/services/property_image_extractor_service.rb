@@ -84,6 +84,13 @@ class PropertyImageExtractorService
     Rails.logger.info("PropertyImageExtractorService: IMG tags found #{img_urls.size} images")
     urls.concat(img_urls)
 
+    # 4. Si c'est une page Bien'ici, chercher les images Century21 dans le code source
+    if @url&.include?("bienici.com")
+      century21_urls = extract_century21_images_from_html
+      Rails.logger.info("PropertyImageExtractorService: Century21 images found #{century21_urls.size} images")
+      urls.concat(century21_urls)
+    end
+
     # Nettoyer et dédupliquer les URLs
     cleaned_urls = urls.map { |url| normalize_url(url) }
                        .compact
@@ -166,6 +173,18 @@ class PropertyImageExtractorService
 
     Rails.logger.debug("PropertyImageExtractorService: Extracted #{urls.size} raw img URLs")
     urls
+  end
+
+  def extract_century21_images_from_html
+    urls = []
+
+    # Chercher toutes les URLs d'images Century21 dans le HTML
+    # Pattern : https://images.century21.fr/XXX/XXXX/c21_XXX_XXXX_XXXX_X_UUID.jpg
+    @html.scan(%r{https://images\.century21\.fr/[^"'\s<>]+\.jpg}i) do |match|
+      urls << match
+    end
+
+    urls.uniq
   end
 
   def normalize_url(url)

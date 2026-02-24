@@ -36,13 +36,15 @@ class PropertyScraperService
     Rails.logger.info("  Options: cache=#{@use_cache}, images=#{@extract_images}, geocode=#{@geocode}, js=#{@use_javascript}")
 
     # Vérifier le cache si activé (sauf pour les URLs Jinka qui expirent)
-    if @use_cache && !@url.match?(JINKA_REDIRECT_PATTERN)
+    is_jinka = @url.match?(JINKA_REDIRECT_PATTERN) || @url.match?(JINKA_AD_PATTERN)
+
+    if @use_cache && !is_jinka
       cached_data = check_cache
       if cached_data
         Rails.logger.info("PropertyScraperService: Cache hit, returning cached data")
         return cached_data
       end
-    elsif @url.match?(JINKA_REDIRECT_PATTERN)
+    elsif is_jinka
       Rails.logger.info("PropertyScraperService: Jinka URL detected, bypassing cache")
     end
 
@@ -53,7 +55,10 @@ class PropertyScraperService
     Rails.logger.info("PropertyScraperService: URL resolved to #{resolved_url}")
 
     # Vérifier si la résolution Jinka a échoué
-    if @url.match?(JINKA_REDIRECT_PATTERN) && resolved_url == @url
+    is_jinka_original = @url.match?(JINKA_REDIRECT_PATTERN) || @url.match?(JINKA_AD_PATTERN)
+    is_jinka_resolved = resolved_url.match?(JINKA_REDIRECT_PATTERN) || resolved_url.match?(JINKA_AD_PATTERN)
+
+    if is_jinka_original && is_jinka_resolved
       @errors << "Le lien Jinka a expiré ou ne redirige plus. Utilisez l'URL directe du bien (ouvrez le lien dans votre navigateur et copiez l'URL finale)."
       Rails.logger.warn("PropertyScraperService: Jinka redirect failed - URL unchanged")
     end
@@ -104,7 +109,8 @@ class PropertyScraperService
     end
 
     # Mettre en cache si activé (mais pas pour les URLs Jinka)
-    if @use_cache && !@url.match?(JINKA_REDIRECT_PATTERN)
+    is_jinka = @url.match?(JINKA_REDIRECT_PATTERN) || @url.match?(JINKA_AD_PATTERN)
+    if @use_cache && !is_jinka
       save_to_cache(data)
     end
 
@@ -297,22 +303,30 @@ class PropertyScraperService
       body.force_encoding("UTF-8") if body.encoding.name == "ASCII-8BIT"
       body = body.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
 
-      # Chercher le lien "Voir l'annonce" ou le lien externe
-      if body =~ /<a[^>]*href=["']([^"']+)["'][^>]*(?:class=["'][^"']*button[^"']*["']|>.*?Voir.*?annonce)/mi
-        real_url = $1
-        # Décoder les entités HTML si nécessaire
-        real_url = CGI.unescapeHTML(real_url) if real_url.include?("&")
-        Rails.logger.info("PropertyScraperService: Found real URL in Jinka page: #{real_url}")
-        return real_url
+      # Chercher tous les liens vers des sites immobiliers connus
+      known_sites = %w[seloger leboncoin pap bienici century21 logic-immo orpi laforet lefigaro]
+
+      body.scan(/href=["']([^"']+)["']/i) do |match|
+        url_candidate = match[0]
+        next if url_candidate.include?("jinka.fr")
+        next if url_candidate.start_with?("/") || url_candidate.start_with?("#")
+
+        # Vérifier si c'est un site immobilier connu
+        if known_sites.any? { |site| url_candidate.include?(site) }
+          # Décoder les entités HTML si nécessaire
+          url_candidate = CGI.unescapeHTML(url_candidate) if url_candidate.include?("&")
+          Rails.logger.info("PropertyScraperService: Found real URL in Jinka page: #{url_candidate}")
+          return url_candidate
+        end
       end
 
       # Chercher dans le JSON embarqué
-      if body =~ /<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/mi
-        json_content = $1
+      body.scan(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/mi) do |match|
+        json_content = match[0]
         begin
           data = JSON.parse(json_content)
           if data["url"] && !data["url"].include?("jinka.fr")
-            Rails.logger.info("PropertyScraperService: Found URL in JSON-LD: #{data["url"]}")
+            Rails.logger.info("PropertyScraperService: Found URL in JSON-LD: #{data['url']}")
             return data["url"]
           end
         rescue JSON::ParserError
@@ -392,6 +406,12 @@ class PropertyScraperService
   def extract_from_bienici(url)
     html = fetch_html(url)
     return nil unless html
+
+    # Si aucune image trouvée et JS disponible, réessayer avec JS
+    if @extract_images && @image_urls.size <= 1 && JavascriptRendererService.enabled? && !@use_javascript
+      Rails.logger.info("PropertyScraperService: Bien'ici - few images found, retrying with JavaScript")
+      html = fetch_html(url, true) # Force JS rendering
+    end
 
     json_ld = extract_json_ld(html)
 

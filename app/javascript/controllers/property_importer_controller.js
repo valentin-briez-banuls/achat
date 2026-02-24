@@ -37,14 +37,15 @@ export default class extends Controller {
 
         // Stocker les URLs d'images dans un champ caché
         if (data.image_urls && data.image_urls.length > 0) {
-          let imageUrlsInput = this.formTarget.querySelector('input[name="_image_urls"]')
-          if (!imageUrlsInput) {
-            imageUrlsInput = document.createElement('input')
-            imageUrlsInput.type = 'hidden'
-            imageUrlsInput.name = '_image_urls'
-            this.formTarget.appendChild(imageUrlsInput)
+          console.log("Storing image URLs:", data.image_urls)
+
+          const input = this.formTarget.querySelector('[name="property[image_urls]"]')
+          if (input) {
+            input.value = JSON.stringify(data.image_urls)
+            console.log("Image URLs stored in property[image_urls]:", input.value)
+          } else {
+            console.error("Could not find input[name='property[image_urls]']")
           }
-          imageUrlsInput.value = JSON.stringify(data.image_urls)
         }
 
         // Afficher un message avec les infos sur les images

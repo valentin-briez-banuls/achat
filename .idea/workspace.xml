@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules.">
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/properties_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/properties_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/controllers/property_importer_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/controllers/property_importer_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/property.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/property.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/property_image_extractor_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_image_extractor_service.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/services/property_scraper_service.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/property_scraper_service.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/_card.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/_card.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/properties/_form.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/properties/_form.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -356,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771941734741</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps.">
+      <option name="closed" value="true" />
+      <created>1771942415121</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1771942415121</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,7 +392,8 @@
     <MESSAGE value="Make postal codes optional, allow empty energy and GES classes in property validations, and add data cleaning and validation logic with tests" />
     <MESSAGE value="Install Active Storage and update validations to allow optional postal codes and empty energy/GES classes; implement data cleaning logic and tests." />
     <MESSAGE value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
+    <MESSAGE value="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps." />
+    <option name="LAST_COMMIT_MESSAGE" value="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

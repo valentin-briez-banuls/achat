@@ -24,6 +24,8 @@
   </div>
 
 <%= form_with(model: property, class: "space-y-8", data: { property_importer_target: "form" }) do |f| %>
+  <%= f.hidden_field :image_urls %>
+
   <% if property.errors.any? %>
     <div class="rounded-lg bg-red-50 p-4">
       <ul class="list-disc list-inside text-sm text-red-700">

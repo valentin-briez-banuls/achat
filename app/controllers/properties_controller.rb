@@ -59,7 +59,7 @@ class PropertiesController < ApplicationController
     if property_data
       response_data = {
         success: true,
-        data: property_data,
+        data: property_data.merge(image_urls: scraper.image_urls.to_json),  # Ajouter les URLs en JSON
         image_urls: scraper.image_urls,
         images_count: scraper.image_urls.size,
         warnings: scraper.errors # Inclure les warnings même en cas de succès
@@ -157,7 +157,7 @@ class PropertiesController < ApplicationController
       :floor, :total_floors,
       :score_neighborhood, :score_view, :score_orientation,
       :score_renovation, :score_quietness, :score_brightness,
-      :status, :listing_url, :personal_notes,
+      :status, :listing_url, :personal_notes, :image_urls,
       photos: []
     )
   end

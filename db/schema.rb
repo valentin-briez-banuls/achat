@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_132618) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_142836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -107,6 +107,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_132618) do
     t.boolean "has_outdoor", default: false
     t.boolean "has_parking", default: false
     t.bigint "household_id", null: false
+    t.text "image_urls"
     t.decimal "latitude", precision: 10, scale: 7
     t.string "listing_url"
     t.decimal "longitude", precision: 10, scale: 7
