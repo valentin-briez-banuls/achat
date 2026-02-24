@@ -128,6 +128,7 @@ class PropertiesController < ApplicationController
 
     if @property.update(property_params)
       @property.recalculate_score!
+      DownloadPropertyImagesJob.perform_later(@property.id) if @property.parsed_image_urls.any?
       redirect_to @property, notice: "Bien mis à jour."
     else
       render :edit, status: :unprocessable_entity
