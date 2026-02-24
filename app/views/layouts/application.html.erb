@@ -9,7 +9,8 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
     <link rel="icon" href="/icon.png" type="image/png">
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -19,7 +20,7 @@
     <% end %>
 
     <main class="<%= user_signed_in? ? 'lg:pl-64' : '' %>">
-      <div class="px-4 py-6 sm:px-6 lg:px-8">
+      <div class="<%= user_signed_in? ? 'px-4 py-6 sm:px-6 lg:px-8' : '' %>">
         <%= render "shared/flash" %>
         <%= yield %>
       </div>
