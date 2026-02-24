@@ -1,7 +1,7 @@
 class CreateFinancialProfiles < ActiveRecord::Migration[8.1]
   def change
     create_table :financial_profiles do |t|
-      t.references :household, null: false, foreign_key: true
+      t.references :household, null: false, foreign_key: true, index: { unique: true }
 
       # Revenus
       t.decimal :salary_person_1, precision: 10, scale: 2, default: 0
@@ -37,6 +37,5 @@ class CreateFinancialProfiles < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :financial_profiles, :household_id, unique: true
   end
 end
