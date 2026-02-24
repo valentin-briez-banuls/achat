@@ -1,0 +1,126 @@
+<% content_for(:title, "Comparateur de biens") %>
+
+<div class="max-w-6xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900">Comparateur</h1>
+    <%= link_to "Retour aux biens", properties_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead>
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase bg-gray-50 sticky left-0"></th>
+          <% @properties.each do |prop| %>
+            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-900 bg-gray-50 min-w-[200px]">
+              <%= link_to prop.title.truncate(25), prop, class: "hover:text-blue-600" %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <!-- Score -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Score</td>
+          <% @properties.each do |prop| %>
+            <td class="px-4 py-3 text-center"><%= prop.decorate.score_badge %></td>
+          <% end %>
+        </tr>
+        <!-- Compatibilité -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Compatibilité</td>
+          <% @properties.each do |prop| %>
+            <td class="px-4 py-3 text-center">
+              <% if @scores[prop] %>
+                <%= render "shared/traffic_light", light: @scores[prop].traffic_light %>
+              <% else %>
+                —
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+        <!-- Prix -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Prix</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm font-semibold"><%= currency(prop.price) %></td><% end %>
+        </tr>
+        <!-- Surface -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Surface</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.surface %> m²</td><% end %>
+        </tr>
+        <!-- Prix/m² -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Prix/m²</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= currency(prop.price_per_sqm) %></td><% end %>
+        </tr>
+        <!-- Chambres -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Chambres</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.bedrooms || "—" %></td><% end %>
+        </tr>
+        <!-- DPE -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">DPE</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center"><%= prop.decorate.energy_badge %></td><% end %>
+        </tr>
+        <!-- Ville -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Ville</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center text-sm"><%= prop.city %></td><% end %>
+        </tr>
+        <!-- Mensualité -->
+        <tr class="bg-blue-50/50">
+          <td class="px-4 py-3 text-sm font-semibold text-blue-800 bg-blue-50 sticky left-0">Mensualité</td>
+          <% @properties.each do |prop| %>
+            <% sim = @simulations[prop] %>
+            <td class="px-4 py-3 text-center text-sm font-bold text-blue-700"><%= sim ? currency(sim.total_monthly_payment) : "—" %></td>
+          <% end %>
+        </tr>
+        <!-- Coût total crédit -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Coût total crédit</td>
+          <% @properties.each do |prop| %>
+            <% sim = @simulations[prop] %>
+            <td class="px-4 py-3 text-center text-sm"><%= sim ? currency(sim.total_credit_cost) : "—" %></td>
+          <% end %>
+        </tr>
+        <!-- Taux endettement -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Endettement</td>
+          <% @properties.each do |prop| %>
+            <% sim = @simulations[prop] %>
+            <td class="px-4 py-3 text-center"><%= sim ? sim.decorate.debt_ratio_badge : "—" %></td>
+          <% end %>
+        </tr>
+        <!-- PTZ -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">PTZ</td>
+          <% @properties.each do |prop| %>
+            <% sim = @simulations[prop] %>
+            <td class="px-4 py-3 text-center"><%= sim ? sim.decorate.ptz_badge : "—" %></td>
+          <% end %>
+        </tr>
+        <!-- Statut -->
+        <tr>
+          <td class="px-4 py-3 text-sm font-medium text-gray-500 bg-gray-50 sticky left-0">Statut</td>
+          <% @properties.each do |prop| %><td class="px-4 py-3 text-center"><%= prop.decorate.status_badge %></td><% end %>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Comparative Charts -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Mensualités comparées</h3>
+      <%= bar_chart @properties.map { |p| [p.title.truncate(20), @simulations[p]&.total_monthly_payment.to_f] },
+          colors: ["#3b82f6"], suffix: " €" %>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Scores comparés</h3>
+      <%= bar_chart @properties.map { |p| [p.title.truncate(20), @scores[p]&.total_score.to_i] },
+          colors: ["#10b981"], library: { scales: { y: { max: 100 } } } %>
+    </div>
+  </div>
+</div>

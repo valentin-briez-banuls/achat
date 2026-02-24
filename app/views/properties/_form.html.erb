@@ -1,0 +1,110 @@
+<%= form_with(model: property, class: "space-y-8") do |f| %>
+  <% if property.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% property.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Informations principales</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="sm:col-span-2">
+        <%= f.label :title, "Titre", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :title, placeholder: "Ex: T3 lumineux centre-ville", class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :price, "Prix affiché (€)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :price, step: 1000, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :surface, "Surface (m²)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :surface, step: 0.5, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :property_type, "Type", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :property_type, [["Appartement", "appartement"], ["Maison", "maison"], ["Terrain", "terrain"], ["Loft", "loft"], ["Duplex", "duplex"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :condition, "État", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :condition, [["Ancien", "ancien"], ["Neuf", "neuf"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :rooms, "Pièces", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :rooms, min: 1, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :bedrooms, "Chambres", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :bedrooms, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Localisation</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div><%= f.label :city, "Ville", class: "block text-sm font-medium text-gray-700" %><%= f.text_field :city, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :postal_code, "Code postal", class: "block text-sm font-medium text-gray-700" %><%= f.text_field :postal_code, maxlength: 5, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div class="sm:col-span-2"><%= f.label :address, "Adresse", class: "block text-sm font-medium text-gray-700" %><%= f.text_field :address, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Financier</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div><%= f.label :agency_fees, "Frais d'agence (€)", class: "block text-sm font-medium text-gray-700" %><%= f.number_field :agency_fees, step: 100, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div class="flex items-end pb-2">
+        <label class="flex items-center gap-2">
+          <%= f.check_box :agency_fees_included, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          <span class="text-sm text-gray-700">Frais inclus dans le prix</span>
+        </label>
+      </div>
+      <div><%= f.label :copro_charges_monthly, "Charges copro/mois (€)", class: "block text-sm font-medium text-gray-700" %><%= f.number_field :copro_charges_monthly, step: 10, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :property_tax_yearly, "Taxe foncière/an (€)", class: "block text-sm font-medium text-gray-700" %><%= f.number_field :property_tax_yearly, step: 50, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :estimated_works, "Travaux estimés (€)", class: "block text-sm font-medium text-gray-700" %><%= f.number_field :estimated_works, step: 500, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Caractéristiques</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div><%= f.label :energy_class, "DPE", class: "block text-sm font-medium text-gray-700" %><%= f.select :energy_class, [["—", nil]] + Property::ENERGY_CLASSES.map { |c| [c, c] }, {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :ges_class, "GES", class: "block text-sm font-medium text-gray-700" %><%= f.select :ges_class, [["—", nil]] + Property::ENERGY_CLASSES.map { |c| [c, c] }, {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :floor, "Étage", class: "block text-sm font-medium text-gray-700" %><%= f.number_field :floor, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div class="flex items-center gap-6 pt-6">
+        <label class="flex items-center gap-2"><%= f.check_box :has_outdoor, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %><span class="text-sm text-gray-700">Extérieur</span></label>
+        <label class="flex items-center gap-2"><%= f.check_box :has_parking, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %><span class="text-sm text-gray-700">Parking</span></label>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Évaluation subjective (1-5)</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% { score_neighborhood: "Quartier", score_view: "Vue", score_orientation: "Exposition", score_renovation: "État/Travaux", score_quietness: "Calme", score_brightness: "Luminosité" }.each do |field, label| %>
+        <div>
+          <%= f.label field, label, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.select field, [["— Non évalué", nil]] + (1..5).map { |n| ["#{n}/5", n] }, {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Autres</legend>
+    <div class="space-y-4">
+      <div><%= f.label :listing_url, "Lien annonce", class: "block text-sm font-medium text-gray-700" %><%= f.url_field :listing_url, placeholder: "https://...", class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :personal_notes, "Notes personnelles", class: "block text-sm font-medium text-gray-700" %><%= f.text_area :personal_notes, rows: 3, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %></div>
+      <div><%= f.label :photos, "Photos", class: "block text-sm font-medium text-gray-700" %><%= f.file_field :photos, multiple: true, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %></div>
+      <div>
+        <%= f.label :status, "Statut", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :status, [["À analyser", "a_analyser"], ["À visiter", "a_visiter"], ["Visité", "visite"], ["Offre faite", "offre_faite"], ["Refusé", "refuse"], ["Accepté", "accepte"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="pt-4">
+    <%= f.submit property.new_record? ? "Ajouter le bien" : "Mettre à jour", class: "w-full py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

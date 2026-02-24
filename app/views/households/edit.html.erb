@@ -1,0 +1,18 @@
+<% content_for(:title, "Modifier le foyer") %>
+
+<div class="mx-auto max-w-lg">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Modifier le foyer</h1>
+
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <%= form_with(model: @household, class: "space-y-6") do |f| %>
+      <div>
+        <%= f.label :name, "Nom du foyer", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :name, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div class="flex gap-3">
+        <%= f.submit "Enregistrer", class: "flex-1 py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+        <%= link_to "Annuler", household_path, class: "flex-1 text-center py-2.5 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200" %>
+      </div>
+    <% end %>
+  </div>
+</div>

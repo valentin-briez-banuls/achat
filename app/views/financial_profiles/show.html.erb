@@ -1,0 +1,69 @@
+<% content_for(:title, "Profil financier") %>
+<% fp = @financial_profile.decorate %>
+
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900">Profil financier</h1>
+    <%= link_to "Modifier", edit_financial_profile_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+  </div>
+
+  <!-- KPI -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <%= render "shared/financial_indicator", label: "Capacité d'emprunt", value: fp.formatted_borrowing_capacity, color: "blue",
+        icon_path: "M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" %>
+    <%= render "shared/financial_indicator", label: "Mensualité max", value: fp.formatted_max_monthly_payment, color: "yellow",
+        icon_path: "M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" %>
+    <%= render "shared/financial_indicator", label: "Taux d'endettement", value: fp.formatted_debt_ratio, color: fp.debt_ratio.to_f > 33 ? "red" : "green",
+        icon_path: "M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" %>
+    <%= render "shared/financial_indicator", label: "Reste à vivre", value: fp.formatted_remaining_to_live, color: fp.remaining_to_live.to_f > 1000 ? "green" : "red",
+        icon_path: "M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" %>
+  </div>
+
+  <!-- Details -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Revenus</h3>
+      <dl class="space-y-3">
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Salaire personne 1</dt><dd class="text-sm font-medium"><%= fp.formatted_salary_1 %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Salaire personne 2</dt><dd class="text-sm font-medium"><%= fp.formatted_salary_2 %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Autres revenus</dt><dd class="text-sm font-medium"><%= currency(fp.other_income) %></dd></div>
+        <div class="flex justify-between border-t pt-3"><dt class="text-sm font-semibold text-gray-900">Total mensuel</dt><dd class="text-sm font-bold text-blue-600"><%= fp.formatted_total_income %></dd></div>
+      </dl>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Apport & Situation</h3>
+      <dl class="space-y-3">
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Apport</dt><dd class="text-sm font-medium"><%= currency(fp.personal_contribution) %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Épargne restante</dt><dd class="text-sm font-medium"><%= currency(fp.remaining_savings) %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Taux proposé</dt><dd class="text-sm font-medium"><%= fp.proposed_rate %>%</dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Durée</dt><dd class="text-sm font-medium"><%= fp.desired_duration_years %> ans</dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Zone PTZ</dt><dd class="text-sm font-medium"><%= fp.ptz_zone || "—" %></dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Rate Impact Chart -->
+  <% if @rate_impact %>
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Impact de la variation de taux sur la mensualité</h3>
+      <%= line_chart @rate_impact.map { |r| ["#{r[:rate]}%", r[:monthly_payment].to_f] },
+          colors: ["#3b82f6"], height: "250px", suffix: " €", library: { elements: { point: { radius: 4 } } } %>
+    </div>
+  <% end %>
+
+  <!-- Danger Indicators -->
+  <% if @finance_data[:danger_indicators].any? %>
+    <div class="bg-white rounded-xl border border-red-200 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-red-800 mb-3">Alertes financières</h3>
+      <ul class="space-y-2">
+        <% @finance_data[:danger_indicators].each do |indicator| %>
+          <% bg = { critical: "bg-red-50 text-red-800", warning: "bg-yellow-50 text-yellow-800", info: "bg-blue-50 text-blue-800" }[indicator[:level]] %>
+          <li class="flex items-center gap-2 p-2 rounded-lg <%= bg %> text-sm">
+            <%= indicator[:message] %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

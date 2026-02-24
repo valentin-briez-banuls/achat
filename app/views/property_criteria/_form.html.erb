@@ -1,0 +1,70 @@
+<%= form_with(model: criterion, url: criterion.new_record? ? property_criterion_path : property_criterion_path, method: criterion.new_record? ? :post : :patch, class: "space-y-8") do |f| %>
+  <% if criterion.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% criterion.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Critères obligatoires</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :max_budget, "Budget maximum (€)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :max_budget, step: 1000, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :min_surface, "Surface minimum (m²)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :min_surface, step: 1, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :min_bedrooms, "Chambres minimum", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :min_bedrooms, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :max_work_distance_km, "Distance max travail (km)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :max_work_distance_km, step: 0.5, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :geographic_zone, "Zone géographique", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :geographic_zone, placeholder: "Ex: Lyon, 69", class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :property_condition, "État du bien", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :property_condition, [["Peu importe", "any_condition"], ["Ancien", "ancien"], ["Neuf", "neuf"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :min_energy_class, "Classe énergétique min", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :min_energy_class, [["Peu importe", nil]] + PropertyCriterion::ENERGY_CLASSES.map { |c| [c, c] }, {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div class="flex items-center gap-6 pt-6">
+        <label class="flex items-center gap-2">
+          <%= f.check_box :outdoor_required, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          <span class="text-sm text-gray-700">Extérieur obligatoire</span>
+        </label>
+        <label class="flex items-center gap-2">
+          <%= f.check_box :parking_required, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          <span class="text-sm text-gray-700">Parking obligatoire</span>
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Pondération des critères (0-10)</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% { weight_neighborhood: "Quartier", weight_view: "Vue", weight_orientation: "Exposition", weight_renovation: "Travaux à prévoir", weight_quietness: "Calme", weight_brightness: "Luminosité" }.each do |field, label| %>
+        <div>
+          <%= f.label field, label, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.range_field field, min: 0, max: 10, step: 1, class: "mt-2 w-full", data: { controller: "range-display", action: "input->range-display#update" } %>
+          <div class="flex justify-between text-xs text-gray-400 mt-1"><span>0</span><span data-range-display-target="value"><%= criterion.send(field) %></span><span>10</span></div>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <div class="pt-4">
+    <%= f.submit criterion.new_record? ? "Enregistrer les critères" : "Mettre à jour", class: "w-full py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

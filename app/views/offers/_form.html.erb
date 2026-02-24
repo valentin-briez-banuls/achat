@@ -1,0 +1,43 @@
+<%= form_with(model: [property, offer], class: "space-y-4") do |f| %>
+  <% if offer.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% offer.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :amount, "Montant de l'offre (€)", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.number_field :amount, step: 1000, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+    <% if offer.new_record? && property.price.positive? %>
+      <p class="mt-1 text-xs text-gray-500">
+        -5% = <%= currency(property.price * 0.95) %> &middot;
+        -10% = <%= currency(property.price * 0.90) %>
+      </p>
+    <% end %>
+  </div>
+  <div>
+    <%= f.label :offered_on, "Date de l'offre", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.date_field :offered_on, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+  <div>
+    <%= f.label :response_deadline, "Date limite de réponse", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.date_field :response_deadline, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+  <div>
+    <%= f.label :status, "Statut", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.select :status, [["En attente", "en_attente"], ["Acceptée", "acceptee"], ["Refusée", "refusee"], ["Contre-offre", "contre_offre"], ["Expirée", "expiree"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+  <div>
+    <%= f.label :conditions, "Conditions", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_area :conditions, rows: 2, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+  <div>
+    <%= f.label :notes, "Notes", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_area :notes, rows: 2, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+  <div class="pt-2">
+    <%= f.submit offer.new_record? ? "Envoyer l'offre" : "Mettre à jour", class: "w-full py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

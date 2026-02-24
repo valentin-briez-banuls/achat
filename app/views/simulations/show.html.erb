@@ -1,0 +1,77 @@
+<% content_for(:title, "Simulation - #{@simulation.name}") %>
+<% sim = @simulation.decorate %>
+
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @simulation.name || "Simulation" %></h1>
+      <p class="mt-1 text-sm text-gray-500">
+        <%= @property.title %> &middot; <%= sim.scenario_label %>
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= sim.danger_badge %>
+      <%= link_to "Modifier", edit_property_simulation_path(@property, @simulation), class: "rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <%= render "shared/financial_indicator", label: "Mensualité totale", value: sim.formatted_total_monthly,
+        color: "blue", icon_path: "M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" %>
+    <%= render "shared/financial_indicator", label: "Coût total projet", value: sim.formatted_total_project_cost,
+        color: "gray", icon_path: "M2.25 21h19.5M3.75 3v18m16.5-18v18" %>
+    <%= render "shared/financial_indicator", label: "Taux d'endettement", value: sim.formatted_debt_ratio,
+        color: @simulation.debt_ratio.to_f > 35 ? "red" : "green",
+        icon_path: "M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" %>
+    <%= render "shared/financial_indicator", label: "Effort mensuel réel", value: sim.formatted_real_effort,
+        color: "yellow", icon_path: "M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
+        subtitle: "Mensualité + charges copro + taxe foncière" %>
+  </div>
+
+  <!-- Details -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Décomposition du financement</h3>
+      <dl class="space-y-3">
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Prix négocié</dt><dd class="text-sm font-medium"><%= currency(@simulation.negotiated_price) %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Frais de notaire</dt><dd class="text-sm font-medium"><%= sim.formatted_notary_fees %></dd></div>
+        <% if @simulation.additional_works&.positive? %>
+          <div class="flex justify-between"><dt class="text-sm text-gray-500">Travaux</dt><dd class="text-sm font-medium"><%= currency(@simulation.additional_works) %></dd></div>
+        <% end %>
+        <div class="flex justify-between border-t pt-2"><dt class="text-sm font-semibold">Coût total projet</dt><dd class="text-sm font-bold"><%= sim.formatted_total_project_cost %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Apport personnel</dt><dd class="text-sm font-medium text-green-600">- <%= currency(@simulation.personal_contribution) %></dd></div>
+        <% if @simulation.ptz_eligible? %>
+          <div class="flex justify-between"><dt class="text-sm text-gray-500">PTZ</dt><dd class="text-sm font-medium text-green-600">- <%= sim.formatted_ptz_amount %></dd></div>
+        <% end %>
+        <div class="flex justify-between border-t pt-2"><dt class="text-sm font-semibold">Prêt principal</dt><dd class="text-sm font-bold text-blue-600"><%= sim.formatted_main_loan %></dd></div>
+      </dl>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Paramètres du prêt</h3>
+      <dl class="space-y-3">
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Taux</dt><dd class="text-sm font-medium"><%= @simulation.loan_rate %>%</dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Durée</dt><dd class="text-sm font-medium"><%= @simulation.loan_duration_years %> ans</dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Mensualité prêt principal</dt><dd class="text-sm font-medium"><%= currency(@simulation.monthly_payment_main) %></dd></div>
+        <% if @simulation.ptz_eligible? %>
+          <div class="flex justify-between"><dt class="text-sm text-gray-500">Mensualité PTZ</dt><dd class="text-sm font-medium"><%= currency(@simulation.monthly_payment_ptz) %></dd></div>
+        <% end %>
+        <div class="flex justify-between border-t pt-2"><dt class="text-sm font-semibold">Coût total du crédit</dt><dd class="text-sm font-bold"><%= sim.formatted_total_credit_cost %></dd></div>
+      </dl>
+
+      <div class="mt-4"><%= sim.ptz_badge %></div>
+    </div>
+  </div>
+
+  <!-- Rate Impact -->
+  <% if @rate_impact %>
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Impact variation de taux</h3>
+      <%= line_chart @rate_impact.map { |r| ["#{r[:rate]}%", r[:monthly_payment].to_f] },
+          colors: ["#3b82f6"], height: "200px", suffix: " €" %>
+    </div>
+  <% end %>
+
+  <%= link_to "Retour au bien", @property, class: "text-sm text-blue-600 hover:text-blue-500" %>
+</div>

@@ -1,0 +1,45 @@
+<% content_for(:title, "Critères de recherche") %>
+
+<div class="max-w-3xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900">Critères de recherche</h1>
+    <%= link_to "Modifier", edit_property_criterion_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <!-- Critères obligatoires -->
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Critères obligatoires</h3>
+      <dl class="space-y-3">
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Budget max</dt><dd class="text-sm font-medium"><%= currency(@criterion.max_budget) %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Surface min</dt><dd class="text-sm font-medium"><%= @criterion.min_surface %> m²</dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Chambres min</dt><dd class="text-sm font-medium"><%= @criterion.min_bedrooms %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Extérieur</dt><dd class="text-sm font-medium"><%= @criterion.outdoor_required? ? "Oui" : "Non" %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Parking</dt><dd class="text-sm font-medium"><%= @criterion.parking_required? ? "Oui" : "Non" %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">Zone</dt><dd class="text-sm font-medium"><%= @criterion.geographic_zone || "—" %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">État</dt><dd class="text-sm font-medium"><%= @criterion.property_condition.humanize %></dd></div>
+        <div class="flex justify-between"><dt class="text-sm text-gray-500">DPE min</dt><dd class="text-sm font-medium"><%= @criterion.min_energy_class || "—" %></dd></div>
+      </dl>
+    </div>
+
+    <!-- Pondérations -->
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-4">Pondérations (importance /10)</h3>
+      <div class="space-y-3">
+        <% %w[neighborhood view orientation renovation quietness brightness].each do |c| %>
+          <% label = { "neighborhood" => "Quartier", "view" => "Vue", "orientation" => "Exposition", "renovation" => "Travaux", "quietness" => "Calme", "brightness" => "Luminosité" }[c] %>
+          <% weight = @criterion.send("weight_#{c}") %>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600"><%= label %></span>
+              <span class="font-medium"><%= weight %>/10</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-blue-600 h-2 rounded-full" style="width: <%= weight * 10 %>%"></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

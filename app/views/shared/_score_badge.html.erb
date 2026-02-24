@@ -1,0 +1,10 @@
+<% if score %>
+  <% color = case score.total_score
+             when 75..100 then "text-green-600 bg-green-50 ring-green-500/20"
+             when 45..74 then "text-yellow-600 bg-yellow-50 ring-yellow-500/20"
+             else "text-red-600 bg-red-50 ring-red-500/20"
+             end %>
+  <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= color %>">
+    <%= score.total_score %>/100
+  </span>
+<% end %>

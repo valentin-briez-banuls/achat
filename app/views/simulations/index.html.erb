@@ -1,0 +1,36 @@
+<% content_for(:title, "Simulations") %>
+
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900">Simulations - <%= @property.title %></h1>
+    <%= link_to "Nouvelle simulation", new_property_simulation_path(@property), class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500" %>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Nom</th>
+          <th class="px-4 py-3 text-center text-xs font-medium text-gray-500">Scénario</th>
+          <th class="px-4 py-3 text-right text-xs font-medium text-gray-500">Mensualité</th>
+          <th class="px-4 py-3 text-right text-xs font-medium text-gray-500">Endettement</th>
+          <th class="px-4 py-3 text-center text-xs font-medium text-gray-500">PTZ</th>
+          <th class="px-4 py-3 text-center text-xs font-medium text-gray-500">Danger</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @simulations.each do |sim| %>
+          <% s = sim.decorate %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3"><%= link_to(sim.name || "Simulation", property_simulation_path(@property, sim), class: "text-sm font-medium text-blue-600 hover:underline") %></td>
+            <td class="px-4 py-3 text-center text-sm"><%= s.scenario_label %></td>
+            <td class="px-4 py-3 text-right text-sm font-semibold"><%= s.formatted_total_monthly %></td>
+            <td class="px-4 py-3 text-right"><%= s.debt_ratio_badge %></td>
+            <td class="px-4 py-3 text-center"><%= s.ptz_badge %></td>
+            <td class="px-4 py-3 text-center"><%= s.danger_badge %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

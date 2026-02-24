@@ -1,0 +1,66 @@
+<%= form_with(model: [property, simulation], class: "space-y-6", data: { controller: "simulation-slider" }) do |f| %>
+  <% if simulation.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% simulation.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, "Nom de la simulation", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_field :name, placeholder: "Ex: Scénario optimiste", class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :scenario, "Scénario", class: "block text-sm font-medium text-gray-700" %>
+    <%= f.select :scenario, [["Standard", "standard"], ["Optimiste", "optimiste"], ["Pessimiste", "pessimiste"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= f.label :loan_rate, "Taux d'intérêt (%)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :loan_rate, step: 0.01, min: 0.1, max: 10, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+          data: { simulation_slider_target: "rate", action: "input->simulation-slider#calculate" } %>
+    </div>
+    <div>
+      <%= f.label :loan_duration_years, "Durée (années)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :loan_duration_years, [[10, 10], [15, 15], [20, 20], [25, 25], [30, 30]], {},
+          class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+          data: { simulation_slider_target: "duration", action: "change->simulation-slider#calculate" } %>
+    </div>
+    <div>
+      <%= f.label :personal_contribution, "Apport personnel (€)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :personal_contribution, step: 1000, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+          data: { simulation_slider_target: "contribution", action: "input->simulation-slider#calculate" } %>
+    </div>
+    <div>
+      <%= f.label :negotiated_price, "Prix négocié (€)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :negotiated_price, step: 1000, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+          data: { simulation_slider_target: "price", action: "input->simulation-slider#calculate" } %>
+    </div>
+    <div>
+      <%= f.label :additional_works, "Travaux supplémentaires (€)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :additional_works, step: 500, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.label :price_negotiation_percent, "Négociation prix (%)", class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1 flex items-center gap-2">
+        <%= f.range_field :price_negotiation_percent, min: 0, max: 20, step: 1, class: "flex-1",
+            data: { simulation_slider_target: "negotiation", action: "input->simulation-slider#updateNegotiation" } %>
+        <span class="text-sm font-medium text-gray-700 w-12 text-right" data-simulation-slider-target="negotiationDisplay">
+          <%= simulation.price_negotiation_percent || 0 %>%
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Estimate -->
+  <div class="rounded-lg bg-blue-50 border border-blue-200 p-4" data-simulation-slider-target="estimate">
+    <p class="text-sm text-blue-700">Les résultats seront calculés après enregistrement.</p>
+  </div>
+
+  <div class="pt-2">
+    <%= f.submit simulation.new_record? ? "Lancer la simulation" : "Recalculer", class: "w-full py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

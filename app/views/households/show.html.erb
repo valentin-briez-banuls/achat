@@ -1,0 +1,33 @@
+<% content_for(:title, "Mon foyer") %>
+
+<div class="max-w-2xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900"><%= @household.name %></h1>
+    <%= link_to "Modifier", edit_household_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+  </div>
+
+  <!-- Members -->
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+    <h2 class="text-sm font-semibold text-gray-900 mb-4">Membres du foyer</h2>
+    <ul class="space-y-3">
+      <% @household.users.each do |user| %>
+        <li class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm font-medium text-blue-700">
+            <%= user.first_name[0] %><%= user.last_name[0] %>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900"><%= user.full_name %></p>
+            <p class="text-xs text-gray-500"><%= user.email %></p>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if @household.solo? %>
+      <div class="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
+        <p class="text-sm text-blue-800">Invitez votre partenaire avec ce lien :</p>
+        <code class="mt-1 block text-xs bg-white p-2 rounded border font-mono break-all"><%= join_household_url(token: @household.invitation_token) %></code>
+      </div>
+    <% end %>
+  </div>
+</div>

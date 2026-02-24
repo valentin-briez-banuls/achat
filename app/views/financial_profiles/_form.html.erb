@@ -1,0 +1,102 @@
+<%= form_with(model: financial_profile, url: financial_profile.new_record? ? financial_profile_path : financial_profile_path, method: financial_profile.new_record? ? :post : :patch, class: "space-y-8") do |f| %>
+  <% if financial_profile.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% financial_profile.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Revenus -->
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Revenus mensuels</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :salary_person_1, "Salaire net personne 1", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :salary_person_1, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", placeholder: "2 500" %>
+      </div>
+      <div>
+        <%= f.label :salary_person_2, "Salaire net personne 2", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :salary_person_2, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", placeholder: "0 (si solo)" %>
+      </div>
+      <div>
+        <%= f.label :other_income, "Autres revenus", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :other_income, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :monthly_charges, "Charges mensuelles fixes", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :monthly_charges, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Apport & Épargne -->
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Apport & Épargne</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :personal_contribution, "Apport disponible", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :personal_contribution, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :remaining_savings, "Épargne restante après apport", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :remaining_savings, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Contrats -->
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Situation professionnelle</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :contract_type_person_1, "Contrat personne 1", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :contract_type_person_1, [["CDI", "cdi_1"], ["CDD", "cdd_1"], ["Freelance", "freelance_1"], ["Fonctionnaire", "fonctionnaire_1"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :contract_type_person_2, "Contrat personne 2", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :contract_type_person_2, [["CDI", "cdi_2"], ["CDD", "cdd_2"], ["Freelance", "freelance_2"], ["Fonctionnaire", "fonctionnaire_2"], ["— (solo)", "none_2"]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Prêt -->
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Conditions de prêt</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :proposed_rate, "Taux proposé (%)", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :proposed_rate, step: 0.001, min: 0.1, max: 10, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", placeholder: "3.5" %>
+      </div>
+      <div>
+        <%= f.label :desired_duration_years, "Durée souhaitée", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :desired_duration_years, [[10, 10], [15, 15], [20, 20], [25, 25], [30, 30]], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- PTZ -->
+  <fieldset>
+    <legend class="text-base font-semibold text-gray-900 mb-4">Situation fiscale (PTZ)</legend>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div>
+        <%= f.label :fiscal_reference_income, "Revenu fiscal de référence", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :fiscal_reference_income, step: 0.01, min: 0, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :household_size, "Nombre de personnes", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.number_field :household_size, min: 1, max: 10, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+      <div>
+        <%= f.label :ptz_zone, "Zone PTZ", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :ptz_zone, [["— Sélectionner —", nil], "A", "Abis", "B1", "B2", "C"], {}, class: "mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="flex gap-3 pt-4">
+    <%= f.submit financial_profile.new_record? ? "Créer le profil" : "Mettre à jour", class: "flex-1 py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

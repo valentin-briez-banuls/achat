@@ -1,0 +1,182 @@
+<% content_for(:title, @property.title) %>
+<% prop = @property.decorate %>
+
+<div class="max-w-5xl mx-auto space-y-6">
+  <!-- Header -->
+  <div class="flex items-start justify-between">
+    <div>
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-bold text-gray-900"><%= prop.title %></h1>
+        <%= prop.status_badge %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500"><%= prop.location %> &middot; <%= prop.type_label %> &middot; <%= prop.condition_label %></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to "Modifier", edit_property_path(@property), class: "rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200" %>
+      <%= link_to "Simuler", new_property_simulation_path(@property), class: "rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-500" %>
+    </div>
+  </div>
+
+  <!-- Photos -->
+  <% if @property.photos.attached? %>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 rounded-xl overflow-hidden">
+      <% @property.photos.each do |photo| %>
+        <%= image_tag photo.variant(resize_to_fill: [400, 300]), class: "w-full h-48 object-cover rounded-lg" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <!-- Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Price & Stats -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div><p class="text-xs text-gray-500">Prix</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_price %></p></div>
+          <div><p class="text-xs text-gray-500">Surface</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_surface %></p></div>
+          <div><p class="text-xs text-gray-500">Prix/m²</p><p class="text-xl font-bold text-gray-900"><%= prop.formatted_price_per_sqm %></p></div>
+          <div><p class="text-xs text-gray-500">Chambres</p><p class="text-xl font-bold text-gray-900"><%= @property.bedrooms || "—" %></p></div>
+        </div>
+      </div>
+
+      <!-- Financial Details -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-gray-900 mb-4">Détails financiers</h3>
+        <dl class="grid grid-cols-2 gap-4">
+          <div><dt class="text-xs text-gray-500">Frais d'agence</dt><dd class="text-sm font-medium"><%= currency(@property.agency_fees) %> <%= "(inclus)" if @property.agency_fees_included? %></dd></div>
+          <div><dt class="text-xs text-gray-500">Charges copro</dt><dd class="text-sm font-medium"><%= currency(@property.copro_charges_monthly) %>/mois</dd></div>
+          <div><dt class="text-xs text-gray-500">Taxe foncière</dt><dd class="text-sm font-medium"><%= currency(@property.property_tax_yearly) %>/an</dd></div>
+          <div><dt class="text-xs text-gray-500">Travaux estimés</dt><dd class="text-sm font-medium"><%= currency(@property.estimated_works) %></dd></div>
+        </dl>
+      </div>
+
+      <!-- Characteristics -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-gray-900 mb-4">Caractéristiques</h3>
+        <div class="flex flex-wrap gap-2">
+          <%= prop.energy_badge %>
+          <% if @property.ges_class %>
+            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">GES <%= @property.ges_class %></span>
+          <% end %>
+          <% if @property.has_outdoor? %>
+            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-700">Extérieur</span>
+          <% end %>
+          <% if @property.has_parking? %>
+            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-700">Parking</span>
+          <% end %>
+          <% if @property.floor %>
+            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">Étage <%= @property.floor %></span>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Simulations -->
+      <% if @simulations.any? %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-900">Simulations</h3>
+            <%= link_to "Nouvelle simulation", new_property_simulation_path(@property), class: "text-sm text-blue-600 hover:text-blue-500" %>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead><tr>
+                <th class="text-left text-xs font-medium text-gray-500 pb-2">Nom</th>
+                <th class="text-right text-xs font-medium text-gray-500 pb-2">Mensualité</th>
+                <th class="text-right text-xs font-medium text-gray-500 pb-2">Endettement</th>
+                <th class="text-right text-xs font-medium text-gray-500 pb-2">Coût total</th>
+                <th class="text-center text-xs font-medium text-gray-500 pb-2">PTZ</th>
+              </tr></thead>
+              <tbody class="divide-y divide-gray-100">
+                <% @simulations.each do |sim| %>
+                  <% s = sim.decorate %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="py-2"><%= link_to(sim.name || "Simulation", property_simulation_path(@property, sim), class: "text-sm text-blue-600 hover:underline") %></td>
+                    <td class="py-2 text-right text-sm font-medium"><%= s.formatted_total_monthly %></td>
+                    <td class="py-2 text-right"><%= s.debt_ratio_badge %></td>
+                    <td class="py-2 text-right text-sm"><%= s.formatted_total_credit_cost %></td>
+                    <td class="py-2 text-center"><%= s.ptz_badge %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Notes -->
+      <% if @property.personal_notes.present? %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-2">Notes</h3>
+          <p class="text-sm text-gray-700 whitespace-pre-line"><%= @property.personal_notes %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Score -->
+      <% if @score %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Score de compatibilité</h3>
+          <div class="text-center mb-4">
+            <span class="text-4xl font-bold text-gray-900"><%= @score.total_score %></span><span class="text-lg text-gray-400">/100</span>
+            <div class="mt-2"><%= render "shared/traffic_light", light: @score.traffic_light %></div>
+          </div>
+          <div class="space-y-2">
+            <% { budget_score: "Budget", surface_score: "Surface", bedrooms_score: "Chambres", energy_score: "DPE", location_score: "Localisation", neighborhood_score: "Quartier", view_score: "Vue", orientation_score: "Exposition", quietness_score: "Calme", brightness_score: "Luminosité" }.each do |field, label| %>
+              <% val = @score.send(field) %>
+              <div>
+                <div class="flex justify-between text-xs mb-0.5"><span class="text-gray-500"><%= label %></span><span class="font-medium"><%= val %></span></div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5">
+                  <% bar_color = val >= 75 ? "bg-green-500" : val >= 45 ? "bg-yellow-400" : "bg-red-500" %>
+                  <div class="<%= bar_color %> h-1.5 rounded-full" style="width: <%= val %>%"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Actions -->
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-3">
+        <h3 class="text-sm font-semibold text-gray-900 mb-2">Actions</h3>
+        <%= link_to "Planifier une visite", new_property_visit_path(@property), class: "block w-full text-center rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100" %>
+        <%= link_to "Faire une offre", new_property_offer_path(@property), class: "block w-full text-center rounded-lg bg-green-50 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-100" %>
+        <% if @property.listing_url.present? %>
+          <%= link_to "Voir l'annonce", @property.listing_url, target: "_blank", rel: "noopener", class: "block w-full text-center rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+        <% end %>
+        <%= link_to "Supprimer", property_path(@property), data: { turbo_method: :delete, turbo_confirm: "Supprimer ce bien ?" }, class: "block w-full text-center rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100" %>
+      </div>
+
+      <!-- Visits -->
+      <% if @visits.any? %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Visites</h3>
+          <ul class="space-y-2">
+            <% @visits.each do |visit| %>
+              <li class="text-sm flex justify-between">
+                <span class="text-gray-600"><%= l(visit.scheduled_at, format: :short) %></span>
+                <span class="font-medium"><%= visit.status.humanize %></span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- Offers -->
+      <% if @offers.any? %>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <h3 class="text-sm font-semibold text-gray-900 mb-3">Offres</h3>
+          <ul class="space-y-2">
+            <% @offers.each do |offer| %>
+              <li class="text-sm flex justify-between">
+                <span class="text-gray-600"><%= currency(offer.amount) %></span>
+                <span class="font-medium"><%= offer.status.humanize %></span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
