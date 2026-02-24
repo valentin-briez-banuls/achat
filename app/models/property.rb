@@ -23,9 +23,9 @@ class Property < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :surface, presence: true, numericality: { greater_than: 0 }
   validates :city, presence: true
-  validates :postal_code, presence: true, format: { with: /\A\d{5}\z/ }
-  validates :energy_class, inclusion: { in: ENERGY_CLASSES }, allow_nil: true
-  validates :ges_class, inclusion: { in: ENERGY_CLASSES }, allow_nil: true
+  validates :postal_code, format: { with: /\A\d{5}\z/ }, allow_blank: true
+  validates :energy_class, inclusion: { in: ENERGY_CLASSES }, allow_nil: true, allow_blank: true
+  validates :ges_class, inclusion: { in: ENERGY_CLASSES }, allow_nil: true, allow_blank: true
   validates :score_neighborhood, :score_view, :score_orientation,
             :score_renovation, :score_quietness, :score_brightness,
             numericality: { in: 1..5 }, allow_nil: true

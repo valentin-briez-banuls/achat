@@ -65,6 +65,9 @@ class PropertyScraperService
 
     return nil unless data
 
+    # Nettoyer et valider les données
+    data = clean_and_validate_data(data)
+
     # Ajouter le géocoding si activé
     if @geocode && data[:city] && data[:postal_code]
       coordinates = geocode_address(data[:city], data[:postal_code], data[:address])
@@ -119,6 +122,64 @@ class PropertyScraperService
     end
 
     result
+  end
+
+  def clean_and_validate_data(data)
+    cleaned = {}
+
+    # Nettoyer chaque champ
+    data.each do |key, value|
+      # Ignorer les valeurs nil
+      next if value.nil?
+
+      # Nettoyer les chaînes vides
+      if value.is_a?(String)
+        value = value.strip
+        next if value.empty?
+      end
+
+      # Validation spécifique par champ
+      case key
+      when :postal_code
+        # Ne garder que si c'est un code postal français valide (5 chiffres)
+        next unless value.to_s.match?(/\A\d{5}\z/)
+      when :energy_class, :ges_class
+        # Ne garder que si c'est une classe valide (A-G)
+        value = value.to_s.upcase
+        next unless value.match?(/\A[A-G]\z/)
+      when :property_type
+        # Convertir en symbole si c'est une chaîne
+        value = value.to_sym if value.is_a?(String)
+        # Valider que c'est un type valide
+        valid_types = [:appartement, :maison, :terrain, :loft, :duplex]
+        next unless valid_types.include?(value)
+      when :price, :surface
+        # S'assurer que ce sont des nombres positifs
+        value = value.to_f if value.is_a?(String)
+        next unless value.is_a?(Numeric) && value > 0
+      when :rooms, :bedrooms, :floor, :total_floors
+        # S'assurer que ce sont des entiers positifs
+        value = value.to_i if value.is_a?(String)
+        next unless value.is_a?(Integer) && value >= 0
+      when :latitude, :longitude
+        # S'assurer que ce sont des nombres valides
+        value = value.to_f if value.is_a?(String)
+        next unless value.is_a?(Numeric)
+      end
+
+      cleaned[key] = value
+    end
+
+    # S'assurer que les champs obligatoires sont présents
+    required_fields = [:title, :price, :surface, :city]
+    missing_fields = required_fields - cleaned.keys
+
+    if missing_fields.any?
+      @errors << "Champs obligatoires manquants : #{missing_fields.join(', ')}"
+      Rails.logger.warn("PropertyScraperService: Missing required fields: #{missing_fields.join(', ')}")
+    end
+
+    cleaned
   end
 
   private
