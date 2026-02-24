@@ -7,7 +7,6 @@ services:
       POSTGRES_DB: achat_production
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U achat -d achat_production"]
       interval: 5s
