@@ -36,3 +36,14 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+/features/01_negotiation_simulator.md
+/features/02_price_history_alerts.md
+/features/03_renovation_cost_estimator.md
+/features/04_scoring_criteria_weights_editor.md
+/features/05_public_share_link.md
+/features/06_visit_checklist.md
+/features/07_neighbourhood_map.md
+/features/08_pdf_report_export.md
+/features/09_loan_rate_tracker.md
+/features/10_email_digests.md
+/CLAUDE.md
