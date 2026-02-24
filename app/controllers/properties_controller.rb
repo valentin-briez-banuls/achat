@@ -6,11 +6,44 @@ class PropertiesController < ApplicationController
     properties = policy_scope(Property)
       .includes(:property_score)
 
+    # Filtre par statut
     properties = properties.with_status(params[:status]) if params[:status].present?
 
+    # Filtre par type de bien
+    properties = properties.where(property_type: params[:property_type]) if params[:property_type].present?
+
+    # Filtre par ville (recherche partielle, insensible à la casse)
+    properties = properties.where("city ILIKE ?", "%#{params[:city]}%") if params[:city].present?
+
+    # Filtre par prix
+    properties = properties.where("price >= ?", params[:min_price]) if params[:min_price].present?
+    properties = properties.where("price <= ?", params[:max_price]) if params[:max_price].present?
+
+    # Filtre par surface
+    properties = properties.where("surface >= ?", params[:min_surface]) if params[:min_surface].present?
+    properties = properties.where("surface <= ?", params[:max_surface]) if params[:max_surface].present?
+
+    # Filtre par nombre de chambres
+    properties = properties.where("bedrooms >= ?", params[:min_bedrooms]) if params[:min_bedrooms].present?
+
+    # Filtre par classe énergie (DPE max = on accepte toutes les classes <= celle choisie)
+    if params[:energy_class].present?
+      allowed = Property::ENERGY_CLASSES[0..Property::ENERGY_CLASSES.index(params[:energy_class])]
+      properties = properties.where(energy_class: allowed)
+    end
+
+    # Tri
+    properties = case params[:sort]
+                 when "price_asc"    then properties.order(price: :asc)
+                 when "price_desc"   then properties.order(price: :desc)
+                 when "surface_desc" then properties.order(surface: :desc)
+                 when "score_desc"   then properties.left_joins(:property_score).order("property_scores.total_score DESC NULLS LAST")
+                 else properties.order(created_at: :desc)
+                 end
+
     # TODO: Réactiver pagy une fois le module configuré pour Pagy 9+
-    # @pagy, @properties = pagy(properties.order(created_at: :desc), items: 12)
-    @properties = properties.order(created_at: :desc).limit(12)
+    # @pagy, @properties = pagy(properties, items: 12)
+    @properties = properties.limit(50)
   end
 
   def show
@@ -77,21 +110,6 @@ class PropertiesController < ApplicationController
     authorize @property
 
     if @property.save
-      # Télécharger les images si une URL de listing est fournie
-      if @property.listing_url.present? && params[:_image_urls].present?
-        begin
-          image_urls = JSON.parse(params[:_image_urls])
-          if image_urls.any?
-            Rails.logger.info("PropertiesController: Downloading #{image_urls.size} images for property #{@property.id}")
-            extractor = PropertyImageExtractorService.new(nil, @property.listing_url)
-            extractor.download_and_attach_to(@property, image_urls)
-            Rails.logger.info("PropertiesController: Successfully attached #{@property.photos.count} images")
-          end
-        rescue => e
-          Rails.logger.error("PropertiesController: Failed to download images: #{e.message}")
-        end
-      end
-
       @property.recalculate_score!
       create_default_simulation
       redirect_to @property, notice: "Bien ajouté avec succès."
