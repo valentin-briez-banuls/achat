@@ -1,5 +1,5 @@
 module ApplicationHelper
-  include Pagy::Frontend
+  # include Pagy::Helpers # Pagy 9+ - À configurer si nécessaire
 
   def nav_link(text, path, icon: nil)
     active = current_page?(path)

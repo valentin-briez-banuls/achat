@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
-  include Pagy::Backend
+  # include Pagy::Controller # Pagy 9+ - À configurer si nécessaire
 
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
