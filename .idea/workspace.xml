@@ -7,7 +7,15 @@
           <value>
             <AIAssistantStoredInstruction>
               <option name="actionId" value="AIAssistant.VCS.GenerateCommitMessage" />
-              <option name="content" value="You are a git commit message generator. &#10;Analyze ONLY the staged diff provided and generate ONE single commit message.&#10;&#10;Format:&#10;&lt;type&gt;(&lt;file&gt;): &lt;short description&gt;&#10;&#10;- [ADD] ...&#10;- [FIX] ...&#10;- [REMOVE] ...&#10;- [REFACTOR] ...&#10;&#10;Rules:&#10;- Generate ONLY ONE commit message, never multiple&#10;- Base yourself ONLY on the diff, ignore any other context&#10;- Be concise and precise&#10;- Use imperative mood" />
+              <option name="content" value="You are a senior software engineer.&#10;&#10;Generate a Conventional Commit message using ONLY the provided changes.&#10;&#10;STRICT RULES:&#10;- Format: type(scope): short summary&#10;- Allowed types: feat, fix, refactor, perf, test, docs, style, chore&#10;- Use imperative mood (e.g. &quot;fix bug&quot;, not &quot;fixed bug&quot;)&#10;- Title max 72 characters&#10;- Add a blank line after the title&#10;- Add a concise body explaining WHAT changed and WHY&#10;- Do NOT describe every file&#10;- Do NOT invent information&#10;- Do NOT add explanations outside the commit message&#10;- If no real change is detected, output: chore: update code&#10;&#10;Only output the commit message." />
+            </AIAssistantStoredInstruction>
+          </value>
+        </entry>
+        <entry key="ij.vcs.self-review">
+          <value>
+            <AIAssistantStoredInstruction>
+              <option name="actionId" value="ij.vcs.self-review" />
+              <option name="content" value="You are a senior code reviewer.&#10;&#10;Review ONLY the provided changes.&#10;&#10;Focus on:&#10;- Bugs&#10;- Edge cases&#10;- Performance issues&#10;- Security concerns&#10;- Code clarity&#10;- Bad practices&#10;&#10;Be concise and actionable.&#10;Do not rewrite the entire code.&#10;Do not invent context not present in the diff.&#10;&#10;Changes:&#10;{{diff}}" />
             </AIAssistantStoredInstruction>
           </value>
         </entry>
@@ -18,8 +26,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="style: format code for consistency and readability in controllers">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="chore(docker-compose.yml): update Docker image registry and change exposed port">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/cable_schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/cable_schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,6 +93,7 @@
     "nodejs_package_manager_path": "npm",
     "ruby.structure.view.model.defaults.configured": "true",
     "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
+    "settings.editor.splitter.proportion": "0.29765546",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -504,7 +514,31 @@
       <option name="project" value="LOCAL" />
       <updated>1771969381648</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="chore(docker-compose.yml): update Docker image configuration and build context">
+      <option name="closed" value="true" />
+      <created>1771969668250</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1771969668250</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat(build-docker.yml): add GitHub Actions workflow for building and pushing Docker images">
+      <option name="closed" value="true" />
+      <created>1771970336242</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1771970336242</updated>
+    </task>
+    <task id="LOCAL-00033" summary="chore(docker-compose.yml): update Docker image registry and change exposed port">
+      <option name="closed" value="true" />
+      <created>1771970854157</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1771970854157</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -522,9 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Install Active Storage and update validations to allow optional postal codes and empty energy/GES classes; implement data cleaning logic and tests." />
-    <MESSAGE value="Add migration to separate loan payments and monthly charges in financial profiles, update workspace configuration and include documentation on HCSF rules." />
-    <MESSAGE value="Include warning messages and Jinka-specific error handling in property scraper and importer; update frontend to display warnings and provide Jinka troubleshooting steps." />
     <MESSAGE value="Improve Jinka error handling and property image extraction: add Century21 image support, enhance property scraper with known site link detection, and update importer's frontend logic." />
     <MESSAGE value="Add migration and updates to handle image URLs in properties; extend scraper, backend, and frontend integration." />
     <MESSAGE value="Parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic." />
@@ -547,7 +578,10 @@
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
     <MESSAGE value="-" />
     <MESSAGE value="style: format code for consistency and readability in controllers" />
-    <option name="LAST_COMMIT_MESSAGE" value="style: format code for consistency and readability in controllers" />
+    <MESSAGE value="chore(docker-compose.yml): update Docker image configuration and build context" />
+    <MESSAGE value="feat(build-docker.yml): add GitHub Actions workflow for building and pushing Docker images" />
+    <MESSAGE value="chore(docker-compose.yml): update Docker image registry and change exposed port" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
