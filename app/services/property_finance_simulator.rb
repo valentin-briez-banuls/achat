@@ -62,8 +62,9 @@ class PropertyFinanceSimulator
     price = effective_price
     agency = property.agency_fees_included? ? 0 : (property.agency_fees || 0)
     works = simulation.additional_works || property.estimated_works || 0
+    reno = simulation.renovation_budget_included? ? (simulation.renovation_budget || 0) : 0
 
-    (price + agency + notary[:total] + works).round(2)
+    (price + agency + notary[:total] + works + reno).round(2)
   end
 
   def compute_ptz(project_cost)

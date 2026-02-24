@@ -55,6 +55,39 @@
     </div>
   </div>
 
+  <!-- Renovation budget toggle -->
+  <% if property.renovation_items.any? %>
+    <div class="rounded-lg bg-amber-50 border border-amber-200 p-4"
+         data-controller="renovation">
+      <div class="flex items-start gap-3">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-amber-900">Budget travaux estimé</p>
+          <p class="text-xs text-amber-700 mt-0.5">
+            Fourchette : <%= number_to_currency(property.renovation_cost_min, unit: "€", format: "%n %u") %> – <%= number_to_currency(property.renovation_cost_max, unit: "€", format: "%n %u") %>
+          </p>
+          <div class="mt-3 flex items-center gap-2">
+            <%= f.check_box :renovation_budget_included,
+                class: "rounded border-amber-400 text-amber-600 focus:ring-amber-500",
+                data: { renovation_target: "renovationBudgetIncluded", action: "change->renovation#toggleBudgetField" } %>
+            <%= f.label :renovation_budget_included, "Inclure le budget travaux dans le crédit",
+                class: "text-sm font-medium text-amber-900" %>
+          </div>
+          <div class="mt-3 <%= simulation.renovation_budget_included? ? '' : 'hidden' %>"
+               data-renovation-target="renovationBudgetField">
+            <%= f.label :renovation_budget, "Montant à inclure (€)", class: "block text-xs font-medium text-amber-900 mb-1" %>
+            <%= f.select :renovation_budget,
+                [
+                  ["Estimation basse — #{number_to_currency(property.renovation_cost_min, unit: '€', format: '%n %u')}", property.renovation_cost_min],
+                  ["Estimation haute — #{number_to_currency(property.renovation_cost_max, unit: '€', format: '%n %u')}", property.renovation_cost_max]
+                ],
+                { selected: simulation.renovation_budget || property.renovation_cost_min },
+                class: "block w-full rounded-lg border-amber-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Live Estimate -->
   <div class="rounded-lg bg-blue-50 border border-blue-200 p-4" data-simulation-slider-target="estimate">
     <p class="text-sm text-blue-700">Les résultats seront calculés après enregistrement.</p>

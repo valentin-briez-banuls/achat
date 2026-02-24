@@ -82,7 +82,8 @@ class SimulationsController < ApplicationController
     params.require(:simulation).permit(
       :name, :scenario, :loan_rate, :loan_duration_years,
       :personal_contribution, :negotiated_price,
-      :additional_works, :price_negotiation_percent
+      :additional_works, :price_negotiation_percent,
+      :renovation_budget_included, :renovation_budget
     )
   end
 end

@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters">
-      <change beforePath="$PROJECT_DIR$/app/controllers/offers_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/offers_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-    </list>
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -427,7 +424,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771964223574</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Add negotiation simulator and update offers controller to handle loan calculations">
+      <option name="closed" value="true" />
+      <created>1771965932293</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1771965932293</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection">
+      <option name="closed" value="true" />
+      <created>1771966830624</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1771966830624</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -445,8 +458,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`." />
-    <MESSAGE value="Add models, controllers, and views for household and financial profile management" />
     <MESSAGE value="Add FactoryBot factories for financial profiles and property criteria" />
     <MESSAGE value="Add comprehensive test suite for core models, services, and factories" />
     <MESSAGE value="Add database schema and migrations for core entities and relationships" />
@@ -470,7 +481,9 @@
     <MESSAGE value="Trigger property image downloads after update and improve comparison validation logic." />
     <MESSAGE value="Add rake task to enqueue property image downloads and processing in background" />
     <MESSAGE value="Update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters" />
+    <MESSAGE value="Add negotiation simulator and update offers controller to handle loan calculations" />
+    <MESSAGE value="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

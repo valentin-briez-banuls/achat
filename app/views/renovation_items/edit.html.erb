@@ -1,0 +1,8 @@
+<% content_for(:title, "Modifier un poste de travaux") %>
+<div class="max-w-xl mx-auto">
+  <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Modifier le poste de travaux</h1>
+  <p class="text-sm text-gray-500 mb-4 truncate">Pour : <%= @property.title %></p>
+  <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-6">
+    <%= render "form", renovation_item: @renovation_item, property: @property %>
+  </div>
+</div>

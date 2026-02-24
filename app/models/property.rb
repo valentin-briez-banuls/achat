@@ -5,6 +5,7 @@ class Property < ApplicationRecord
   has_many :visits, dependent: :destroy
   has_many :offers, dependent: :destroy
   has_many :price_histories, class_name: "PropertyPriceHistory", dependent: :destroy
+  has_many :renovation_items, dependent: :destroy
   has_many_attached :photos
 
   # Parse les URLs d'images depuis JSON
@@ -81,6 +82,26 @@ class Property < ApplicationRecord
     last = price_histories.order(:scraped_at).last
     return if last && last.price == price
     price_histories.create!(price: price, scraped_at: Time.current, source: source)
+  end
+
+  def renovation_cost_min
+    renovation_items.sum(:estimated_cost_min)
+  end
+
+  def renovation_cost_max
+    renovation_items.sum(:estimated_cost_max)
+  end
+
+  def notary_fees_total
+    NotaryFeeCalculator.new(price: effective_price, condition: condition).total
+  end
+
+  def total_project_cost_min
+    effective_price + renovation_cost_min + notary_fees_total
+  end
+
+  def total_project_cost_max
+    effective_price + renovation_cost_max + notary_fees_total
   end
 
   def recalculate_score!

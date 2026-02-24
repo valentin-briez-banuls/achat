@@ -90,6 +90,30 @@
           <% end %>
         </tr>
         <tr>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Travaux estimés</td>
+          <% @properties.each do |prop| %>
+            <td class="px-4 py-3 text-center text-sm whitespace-nowrap">
+              <% if prop.renovation_items.any? %>
+                <span class="text-orange-700"><%= currency(prop.renovation_cost_min) %> – <%= currency(prop.renovation_cost_max) %></span>
+              <% else %>
+                <span class="text-gray-400">—</span>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Coût total projet</td>
+          <% @properties.each do |prop| %>
+            <td class="px-4 py-3 text-center text-sm whitespace-nowrap">
+              <% if prop.renovation_items.any? %>
+                <%= currency(prop.total_project_cost_min) %> – <%= currency(prop.total_project_cost_max) %>
+              <% else %>
+                <%= currency(prop.total_project_cost_min) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+        <tr>
           <td class="px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 bg-gray-50 sticky left-0 z-10">Statut</td>
           <% @properties.each do |prop| %><td class="px-4 py-3 text-center"><%= prop.decorate.status_badge %></td><% end %>
         </tr>

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     resource :negotiation, only: [:show] do
       post :calculate, on: :member
     end
+    resources :renovation_items, except: [:index, :show]
     resources :simulations
     resources :visits, except: [:index, :show]
     resources :offers, except: [:index]

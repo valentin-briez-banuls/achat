@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_170001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -203,6 +203,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_160000) do
     t.index ["url_hash"], name: "index_property_scrape_caches_on_url_hash"
   end
 
+  create_table "renovation_items", force: :cascade do |t|
+    t.integer "category", null: false
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.integer "estimated_cost_max", default: 0, null: false
+    t.integer "estimated_cost_min", default: 0, null: false
+    t.bigint "property_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["property_id"], name: "index_renovation_items_on_property_id"
+  end
+
   create_table "simulations", force: :cascade do |t|
     t.decimal "additional_works", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
@@ -221,6 +232,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_160000) do
     t.decimal "ptz_amount", precision: 12, scale: 2, default: "0.0"
     t.boolean "ptz_eligible", default: false
     t.decimal "real_monthly_effort", precision: 10, scale: 2
+    t.integer "renovation_budget", default: 0
+    t.boolean "renovation_budget_included", default: false, null: false
     t.integer "scenario", default: 0
     t.decimal "total_credit_cost", precision: 12, scale: 2
     t.decimal "total_monthly_payment", precision: 10, scale: 2
@@ -269,6 +282,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_160000) do
   add_foreign_key "property_criteria", "households"
   add_foreign_key "property_price_histories", "properties"
   add_foreign_key "property_scores", "properties"
+  add_foreign_key "renovation_items", "properties"
   add_foreign_key "simulations", "properties"
   add_foreign_key "users", "households"
   add_foreign_key "visits", "properties"
