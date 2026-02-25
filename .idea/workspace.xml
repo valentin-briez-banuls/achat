@@ -26,7 +26,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -551,7 +551,55 @@
       <option name="project" value="LOCAL" />
       <updated>1771974112506</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="**feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059**">
+      <option name="closed" value="true" />
+      <created>1771975038220</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1771975038220</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactor(build-docker.yml, .github/workflows/build-docker.yml): refactor write and deploy server tasks to use SSHAction with secret variable expansion">
+      <option name="closed" value="true" />
+      <created>1771975108179</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1771975108179</updated>
+    </task>
+    <task id="LOCAL-00038" summary="**feat(build-docker.yml, .github/workflows/build-docker.yml): add GitHub Actions workflow for deploying Docker images via SSH action**">
+      <option name="closed" value="true" />
+      <created>1771975283181</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1771975283181</updated>
+    </task>
+    <task id="LOCAL-00039" summary="```markdown&#10;fix: improve healthcheck interval for PostgreSQL container in Docker Compose&#10;```">
+      <option name="closed" value="true" />
+      <created>1771975556871</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1771975556871</updated>
+    </task>
+    <task id="LOCAL-00040" summary="**fix: improve healthcheck interval for PostgreSQL container in Docker Compose**">
+      <option name="closed" value="true" />
+      <created>1771976090190</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1771976090190</updated>
+    </task>
+    <task id="LOCAL-00041" summary="refactor(javascript_renderer_service.rb): enhance browser timeout settings">
+      <option name="closed" value="true" />
+      <created>1771977163449</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1771977163449</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -569,12 +617,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add estimated notary fees calculation and display to property details page." />
-    <MESSAGE value="Update UI for consistency and responsive behavior across forms, lists, and navigation components." />
-    <MESSAGE value="Trigger property image downloads after update and improve comparison validation logic." />
-    <MESSAGE value="Add rake task to enqueue property image downloads and processing in background" />
-    <MESSAGE value="Update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters" />
-    <MESSAGE value="Add negotiation simulator and update offers controller to handle loan calculations" />
     <MESSAGE value="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection" />
     <MESSAGE value="Refactor property scraper and add migrations for handling image URLs in properties. Enhance data extraction accuracy and improve error logging." />
     <MESSAGE value="feat(PropertyPriceHistory): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection&#10;&#10;- [ADD] models/property_price_history.rb&#10;- [ADD] migrations/20231001234567_create_property_price_histories.rb&#10;- [ADD] views/property_price_histories/index.html.erb&#10;- [ADD] views/property_price_histories/show.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] views/properties/show.html.erb&#10;&#10;feat(negotiation_simulator): add negotiation simulator and update offers controller to handle loan calculations&#10;&#10;- [ADD] models/negotiation_simulator.rb&#10;- [ADD] controllers/offers_controller.rb&#10;- [ADD] specs/models/negotiation_simulator_spec.rb&#10;- [FIX] views/offers/new.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] services/loan_calculator_service.rb&#10;&#10;feat(.gitignore): update to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters&#10;&#10;- [ADD] .gitignore&#10;- [ADD] features/&#10;- [ADD] CLAUDE.md&#10;- [FIX] .github/workflows/gitlab-ci.yml&#10;- [FIX] .env.example&#10;- [FIX] tasks/local_tasks.rb&#10;&#10;feat(rake): add rake task to enqueue property image downloads and processing in background&#10;&#10;- [ADD] lib/tasks/property_images.rake&#10;- [ADD] db/migrate/20231010123456_add_property_image_processing_queue.rb&#10;- [FIX] controllers/properties_controller.rb&#10;&#10;feat(property scraper): refactor to modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging&#10;&#10;- [REFACTOR] scrapers/property_scraper.rb&#10;- [ADD] specs/scrapers/property_scraper_spec.rb&#10;- [FIX] scrapers/jinka_property_scraper.rb&#10;- [FIX] scrapers/agency_property_scraper.rb&#10;- [FIX] lib/error_logger.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property scraper): parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic&#10;&#10;- [ADD] scrapers/title_parser.rb&#10;- [ADD] specs/scrapers/title_parser_spec.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property images): add migration to handle image URLs in properties; extend scraper, backend, and frontend integration&#10;&#10;- [ADD] models/image.rb&#10;- [ADD] migrations/20231015123456_add_image_urls_to_properties.rb&#10;- [ADD] scrapers/property_scraper.rb&#10;- [ADD] app/controllers/images_controller.rb&#10;- [ADD] spec/rails_helper.rb&#10;- [FIX] views/images/index.html.erb" />
@@ -594,7 +636,13 @@
     <MESSAGE value="feat(db/cable_schema.rb): add #hello comment" />
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created a corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
     <MESSAGE value="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059" />
+    <MESSAGE value="**feat(build-docker.yml, Dockerfile): update Docker image action to v6 and change exposed port to 30059**" />
+    <MESSAGE value="refactor(build-docker.yml, .github/workflows/build-docker.yml): refactor write and deploy server tasks to use SSHAction with secret variable expansion" />
+    <MESSAGE value="**feat(build-docker.yml, .github/workflows/build-docker.yml): add GitHub Actions workflow for deploying Docker images via SSH action**" />
+    <MESSAGE value="```markdown&#10;fix: improve healthcheck interval for PostgreSQL container in Docker Compose&#10;```" />
+    <MESSAGE value="**fix: improve healthcheck interval for PostgreSQL container in Docker Compose**" />
+    <MESSAGE value="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

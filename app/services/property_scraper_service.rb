@@ -797,32 +797,104 @@ class PropertyScraperService
   # Bien'ici - SPA React, données embarquées dans state JS
   # ============================================================================
 
+  # Extraire l'ID de l'annonce depuis une URL Bien'ici
+  # Ex: https://www.bienici.com/annonce/vente/perpignan/maison/4pieces/laforet-immo-facile-22561782
+  #  => "laforet-immo-facile-22561782"
+  def extract_bienici_ad_id(url)
+    URI.parse(url).path.split("/").last
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  # Appel à l'API JSON publique de Bien'ici (pas de JS requis)
+  def fetch_bienici_api(ad_id)
+    api_url = "https://www.bienici.com/realEstateAd.json?id=#{CGI.escape(ad_id)}"
+    Rails.logger.info("PropertyScraperService: Bien'ici API call: #{api_url}")
+    uri = URI.parse(api_url)
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 10, read_timeout: 15) do |http|
+      req = Net::HTTP::Get.new(uri)
+      req["User-Agent"] = USER_AGENT
+      req["Accept"] = "application/json"
+      req["Referer"] = "https://www.bienici.com/"
+      http.request(req)
+    end
+    return nil unless response.is_a?(Net::HTTPSuccess)
+    body = response.body
+    body.force_encoding("UTF-8") if body.encoding.name == "ASCII-8BIT"
+    JSON.parse(body)
+  rescue StandardError => e
+    Rails.logger.warn("PropertyScraperService: Bien'ici API error: #{e.message}")
+    nil
+  end
+
+  def extract_bienici_from_api(ad, url)
+    Rails.logger.info("PropertyScraperService: Bien'ici API - extracting data")
+
+    # Images depuis l'API (url_photo est l'URL directe source, url est via CDN Bien'ici)
+    images = (ad["photos"] || []).map { |p| p["url_photo"] || p["url"] }.compact
+    if images.any?
+      Rails.logger.info("PropertyScraperService: Bien'ici API - found #{images.size} images")
+      @image_urls.concat(images)
+    end
+
+    # Normalisation du type de propriété
+    property_type = detect_property_type_from_text(ad["propertyType"] || "")
+
+    # DPE / GES : l'API retourne la lettre directement
+    energy_class = normalize_energy_class(ad["energyClassification"])
+    ges_class    = normalize_energy_class(ad["greenhouseGazClassification"])
+
+    {
+      listing_url: url,
+      title: ad["title"] || "#{ad["adType"]&.capitalize} #{ad["propertyType"]} #{ad["city"]}",
+      price: ad["price"]&.to_i,
+      surface: ad["surfaceArea"]&.to_f,
+      rooms: ad["roomsQuantity"]&.to_i,
+      bedrooms: ad["bedroomsQuantity"]&.to_i,
+      city: ad["city"],
+      postal_code: ad["postalCode"],
+      latitude: ad.dig("blurredGeoPoint", "lat") || ad.dig("geoPoint", "lat"),
+      longitude: ad.dig("blurredGeoPoint", "lon") || ad.dig("geoPoint", "lon"),
+      property_type: property_type,
+      energy_class: energy_class,
+      ges_class: ges_class,
+      floor: ad["floor"]&.to_i,
+      total_floors: ad["floorQuantity"]&.to_i || ad["floorsQuantity"]&.to_i
+    }.compact
+  end
+
   def extract_from_bienici(url)
+    # Priorité 1 : API JSON publique (pas besoin de JS, données complètes + toutes les photos)
+    ad_id = extract_bienici_ad_id(url)
+    if ad_id
+      ad = fetch_bienici_api(ad_id)
+      if ad && !ad.empty?
+        data = extract_bienici_from_api(ad, url)
+        return data if data && data[:price]
+      end
+    end
+
     html = fetch_html(url)
     return nil unless html
 
-    # Priorité 1: Données embarquées dans le JavaScript (le plus riche)
+    # Priorité 2: Données embarquées dans le JavaScript (le plus riche)
     embedded = extract_embedded_state(html)
     if embedded
       data = extract_bienici_from_state(embedded, url)
       return data if data && data[:price]
     end
 
-    # Priorité 2: __NEXT_DATA__ (si migration vers Next.js)
+    # Priorité 3: __NEXT_DATA__ (si migration vers Next.js)
     next_data = extract_next_data(html)
     if next_data
       data = extract_bienici_from_next_data(next_data, url)
       return data if data && data[:price]
     end
 
-    # Si peu d'images trouvées et JS disponible, réessayer avec JS rendering
-    if @extract_images && @image_urls.size <= 1 && JavascriptRendererService.enabled? && !@use_javascript
-      Rails.logger.info("PropertyScraperService: Bien'ici - few images found, retrying with JavaScript")
-      html = fetch_html(url, true)
-      return nil unless html
-    end
+    # NOTE: On n'utilise plus JavascriptRendererService ici (Ferrum/Chrome timeout en Docker).
+    # L'API JSON publique remplace ce besoin pour Bien'ici.
 
-    # Priorité 3: JSON-LD + meta tags + title parsing
+    # Priorité 4: JSON-LD + meta tags + title parsing
     json_ld = extract_all_json_ld(html)
     title = json_ld&.dig("name") || extract_meta_content(html, "og:title") || extract_title(html)
     title_data = parse_title_info(title) if title
