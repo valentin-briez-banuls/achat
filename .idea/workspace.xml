@@ -26,7 +26,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
+    <list default="true" id="5cea6147-43a9-422a-a801-c6e4a0e0ce4b" name="Changes" comment="docs: update README with detailed features and installation instructions">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/households/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/households/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/shared/_navbar.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/shared/_navbar.html.erb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,12 +43,12 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="chat-panel" value="Claude Sonnet 4.6" />
-      <entry key="agent-panel" value="Claude Sonnet 4.6" />
+      <entry key="chat-panel" value="Auto" />
+      <entry key="agent-panel" value="Auto" />
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="5" />
+    <option name="cachedIndexableFilesCount" value="326" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -56,12 +60,12 @@
     &quot;assignee&quot;: &quot;valentin-briez-banuls&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/valentin-briez-banuls/achat.git&quot;,
-    &quot;accountId&quot;: &quot;4103b547-d9d2-48a6-ada8-cdcbbb1ba828&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/valentin-briez-banuls/achat",
+    "accountId": "4103b547-d9d2-48a6-ada8-cdcbbb1ba828"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -74,26 +78,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.29765546&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "com.intellij.lang.ruby.rbs.tools.collection.workspace.sync.RbsCollectionUpdateProjectActivity#LAST_UPDATE_TIMESTAMP": "1771977575993",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ruby.structure.view.model.defaults.configured": "true",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
+    "settings.editor.splitter.proportion": "0.29765546",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1774386000000" />
     <option name="spentUsd" value="0.28356406" />
@@ -270,6 +275,7 @@
       <option name="presentableId" value="Default" />
       <updated>1771927654072</updated>
       <workItem from="1771927655569" duration="10437000" />
+      <workItem from="1771977515476" duration="4988000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project with essential setup files including `.gitignore`, `.dockerignore`, `.gitattributes`, `.rubocop.yml`, `.ruby-version`, `.rspec`, as well as default error pages in `public/`.">
       <option name="closed" value="true" />
@@ -599,7 +605,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771977163449</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="feat(property_scraper_service.rb): enhance Bien'ici data extraction with API integration and improved error handling">
+      <option name="closed" value="true" />
+      <created>1771977730124</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1771977730124</updated>
+    </task>
+    <task id="LOCAL-00043" summary="docs: update README with detailed features and installation instructions">
+      <option name="closed" value="true" />
+      <created>1771979012482</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1771979012482</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -617,9 +639,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection" />
-    <MESSAGE value="Refactor property scraper and add migrations for handling image URLs in properties. Enhance data extraction accuracy and improve error logging." />
-    <MESSAGE value="feat(PropertyPriceHistory): add `PropertyPriceHistory` model, migration, and UI updates for price tracking and percentage drop detection&#10;&#10;- [ADD] models/property_price_history.rb&#10;- [ADD] migrations/20231001234567_create_property_price_histories.rb&#10;- [ADD] views/property_price_histories/index.html.erb&#10;- [ADD] views/property_price_histories/show.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] views/properties/show.html.erb&#10;&#10;feat(negotiation_simulator): add negotiation simulator and update offers controller to handle loan calculations&#10;&#10;- [ADD] models/negotiation_simulator.rb&#10;- [ADD] controllers/offers_controller.rb&#10;- [ADD] specs/models/negotiation_simulator_spec.rb&#10;- [FIX] views/offers/new.html.erb&#10;- [FIX] controllers/properties_controller.rb&#10;- [FIX] services/loan_calculator_service.rb&#10;&#10;feat(.gitignore): update to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters&#10;&#10;- [ADD] .gitignore&#10;- [ADD] features/&#10;- [ADD] CLAUDE.md&#10;- [FIX] .github/workflows/gitlab-ci.yml&#10;- [FIX] .env.example&#10;- [FIX] tasks/local_tasks.rb&#10;&#10;feat(rake): add rake task to enqueue property image downloads and processing in background&#10;&#10;- [ADD] lib/tasks/property_images.rake&#10;- [ADD] db/migrate/20231010123456_add_property_image_processing_queue.rb&#10;- [FIX] controllers/properties_controller.rb&#10;&#10;feat(property scraper): refactor to modularize URL data extraction, add stricter validations, improve Jinka and agency-specific handling, and enhance error logging&#10;&#10;- [REFACTOR] scrapers/property_scraper.rb&#10;- [ADD] specs/scrapers/property_scraper_spec.rb&#10;- [FIX] scrapers/jinka_property_scraper.rb&#10;- [FIX] scrapers/agency_property_scraper.rb&#10;- [FIX] lib/error_logger.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property scraper): parse structured information from property titles to improve data extraction accuracy; enhance scraper with title-based price, surface, rooms, bedrooms, and city fallback logic&#10;&#10;- [ADD] scrapers/title_parser.rb&#10;- [ADD] specs/scrapers/title_parser_spec.rb&#10;- [FIX] spec/support/shared_contexts/property_scraper_context.rb&#10;&#10;feat(property images): add migration to handle image URLs in properties; extend scraper, backend, and frontend integration&#10;&#10;- [ADD] models/image.rb&#10;- [ADD] migrations/20231015123456_add_image_urls_to_properties.rb&#10;- [ADD] scrapers/property_scraper.rb&#10;- [ADD] app/controllers/images_controller.rb&#10;- [ADD] spec/rails_helper.rb&#10;- [FIX] views/images/index.html.erb" />
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created the corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features.&#10;&#10;**feat(.idea/workspace.xml): add negotiation simulator and update offers controller to handle loan calculations**&#10;&#10;- [ADD] Added a negotiation simulator feature to offers controller.&#10;- [FIX] Updated `offers_controller` to handle loan calculations.&#10;&#10;**fix(README.md): update `.gitignore` to include feature documents and CLAUDE.md, adjust workspace configuration, and increment local task counters**&#10;&#10;- [REFACTOR] Adjusted the `.gitignore` file to include feature documents and CLAUDE.md.&#10;- [REFACOTR] Updated workspace configuration to ensure proper project setup.&#10;- [CHORE] Incremented the local task counter from 23 to 25.&#10;&#10;**refactor(rake_task.rb): add rake task to enqueue property image downloads and processing in background**&#10;&#10;- [REFACTOR] Modularized URL data extraction in the scraper.&#10;- [REFACTOR] Added stricter validations for property URLs.&#10;- [REFACTOR] Enhanced Jinka and agency-specific handling in the scraper.&#10;- [REFACOTR] Improved error logging in the scraper.&#10;&#10;**fix(offers_controller.rb): trigger property image downloads after update and improve comparison validation logic**&#10;&#10;- [FIX] Triggered property image downloads after updates to ensure visual consistency.&#10;- [REFACTOR] Updated comparison validation logic to handle various edge cases more effectively.&#10;&#10;**feat(ui/styles.css): add estimated notary fees calculation and display to property details page**&#10;&#10;- [ADD] Added CSS styles for displaying estimated notary fees on the property details page.&#10;&#10;**refactor(property_scraper.rb): parse structured information from property titles to improve data extraction accuracy**&#10;&#10;- [REFACOTR] Enhanced scraper with title-based price, surface, rooms, bedrooms, and city fallback logic.&#10;- [REFACTOR] Improved Jinka and agency-specific handling in the scraper.&#10;&#10;**refactor(db/migrate/20190831154516_create_property_price_history.rb): handle image URLs in properties**&#10;&#10;- [REFACTOR] Extended scraper, backend, and frontend integration to manage image URLs efficiently.&#10;- [REFACOTR] Updated migration to accommodate new data requirements for property images." />
     <MESSAGE value="Generating commit message..." />
     <MESSAGE value="**feat(.idea/workspace.xml): add `PropertyPriceHistory` model, migration, and UI updates for price tracking**&#10;&#10;- [ADD] Added the `PropertyPriceHistory` model.&#10;- [ADD] Created the corresponding migration to update the database schema.&#10;- [REFACTOR] Refactored the UI to display price history and percentage drop detection features." />
@@ -642,7 +661,10 @@
     <MESSAGE value="```markdown&#10;fix: improve healthcheck interval for PostgreSQL container in Docker Compose&#10;```" />
     <MESSAGE value="**fix: improve healthcheck interval for PostgreSQL container in Docker Compose**" />
     <MESSAGE value="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor(javascript_renderer_service.rb): enhance browser timeout settings" />
+    <MESSAGE value="feat(property_scraper_service.rb): enhance Bien'ici data extraction with API integration and improved error handling" />
+    <MESSAGE value="docs: update README with detailed features and installation instructions" />
+    <MESSAGE value="fix: improve healthcheck interval for PostgreSQL container in Docker Compose" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
